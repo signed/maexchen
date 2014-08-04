@@ -1,5 +1,10 @@
 {
 	"name": "maexchen-server",
+	"description": "An environment for running Mia games, where the players are bots programmed by participants in an exercise session.",
+	"repository" : {
+		"type": "git",
+		"url": "https://github.com/janernsting/maexchen.git"
+	},
 	"version": "0.1.1",
 	"directories": {
 		"lib": "lib"
