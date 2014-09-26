@@ -17,11 +17,11 @@ coffee client.coffee [options]
 Options:
 	-h, --help                     output usage information
 	-V, --version                  output the version number
-	-H, --host <host name>         name or IP of the server
-	-p, --port <port number>       port the server is listening at
-	-n, --name <client name>       client's used to register
-	-b, --localAddress <address>   local address to bind the client's socket
-	-P, --localPort <port number>  local port to bind the client's socket
+	-H, --host <host name>         name or IP of the server, defaults to '127.0.0.1'
+	-P, --port <port number>       port the server is listening at, defaults to '9000'
+	-n, --name <client name>       client's name used to register, defaults to 'CoffeeScript-SimpleBot'
+	-b, --localAddress <address>   local address to bind the client's socket, defaults to ''
+	-p, --localPort <port number>  local port to bind the client's socket, defaults to '9001'
 ```
 
 ## API
