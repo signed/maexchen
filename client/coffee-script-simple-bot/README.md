@@ -30,7 +30,7 @@ Extend `MiaClientBase` to write your own bot.
 
 ### MiaClientBase#constructor(options = {})
 
-Creates a new MiaClientBase instance and sets up the socket.
+Creates a new `MiaClientBase` instance and sets up the socket.
 
 The following options are used:
 
