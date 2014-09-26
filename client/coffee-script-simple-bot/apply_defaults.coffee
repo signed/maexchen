@@ -1,0 +1,1 @@
+module.exports = applyDefaults = (object, defaults) -> object[key] ?= value for key, value of defaults

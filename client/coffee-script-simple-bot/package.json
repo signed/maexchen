@@ -1,0 +1,10 @@
+{
+  "name": "mia-coffee-script-client",
+  "description": "CoffeeScript client for https://github.com/janernsting/maexchen.git . Includes a simple bot example.",
+  "version": "1.0.0",
+  "dependencies": {
+    "commander": "^2.3.0",
+    "log4js": "^0.6.21"
+  },
+  "devDependencies": {}
+}
