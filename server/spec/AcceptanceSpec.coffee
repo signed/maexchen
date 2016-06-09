@@ -44,6 +44,30 @@ describe 'the Mia server', ->
 		game.stop()
 		server.shutDown()
 
+	describe 'echo service', ->
+
+		client = null
+
+		beforeEach ->
+			client = new FakeUdpClient serverPort
+
+		afterEach ->
+			client.shutDown()
+
+		it 'should echo argument of ECHO request', ->
+			client.send "ECHO;hello"
+			client.receives 'hello'
+			client.send "ECHO;a longish text with 33 characters"
+			client.receives 'a longish text with 33 characters'
+
+		it 'should concatenate arguments of ECHO request', ->
+			client.send "ECHO;hello;you"
+			client.receives 'helloyou'
+
+		it 'should echo 42 if no argument is given', ->
+			client.send "ECHO"
+			client.receives '42'
+
 	describe 'player setup', ->
 
 		client = null

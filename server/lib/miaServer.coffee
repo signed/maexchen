@@ -23,7 +23,13 @@ class Server
 
 	handleMessage: (messageCommand, messageArgs, connection) ->
 		log "handleMessage '#{messageCommand}' '#{messageArgs}' from #{connection.id}"
-		if messageCommand == 'REGISTER'
+		if messageCommand == 'ECHO'
+			if (messageArgs.length > 0)
+				text = messageArgs.join('')
+			else
+				text = '42'
+			@handleEcho text, connection
+		else if messageCommand == 'REGISTER'
 			name = messageArgs[0]
 			@handleRegistration name, connection, false
 		else if messageCommand == 'REGISTER_SPECTATOR'
@@ -33,6 +39,10 @@ class Server
 			player = @playerFor connection
 			player?.handleMessage messageCommand, messageArgs
 	
+	handleEcho: (text, connection) ->
+		log "echo: '#{text}'"
+		connection.sendMessage text
+
 	handleRegistration: (name, connection, isSpectator) ->
 		newPlayer = @createPlayer name, connection
 		unless @isValidName name
@@ -77,12 +87,15 @@ class Server
 	
 		belongsTo: (player) ->
 			player.remoteHost == @host
+
+		sendMessage: (message) ->
+			buffer = new Buffer(message)
+			@socket.send buffer, 0, buffer.length, @port, @host
 	
 		createPlayer: (name) ->
 			sendMessageCallback = (message) =>
 				log "sending '#{message}' to #{name} (#{@id})"
-				buffer = new Buffer(message)
-				@socket.send buffer, 0, buffer.length, @port, @host
+				@sendMessage message
 			player = remotePlayer.create name, sendMessageCallback
 			
 			player.remoteHost = @host
