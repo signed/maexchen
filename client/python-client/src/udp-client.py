@@ -16,4 +16,4 @@ class Maexchen_Client:
 
 normaler_client = Maexchen_Client()
 
-print("Die Ausgabe:", normaler_client.echo("Hallo World"))
+print("Die Ausgabe:", normaler_client.echo("Hello World"))
