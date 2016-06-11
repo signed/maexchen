@@ -13,12 +13,35 @@ class Maexchen_Client:
 
     def beitreten(self,name):
         self.sende("REGISTER;"+name)
+        if self.warte_auf_nachricht()=="ROUND STARTING;token":
+            self.sende("JOIN;token")
+
+    def warte_auf_nachricht(self):
+        data, addr = self.sock.recvfrom(1024)
+        return (data.decode('utf-8'))
 
     def sende(self,nachricht):
         self.sock.sendto(nachricht.encode('utf-8'), (self.server_ip, self.server_port))
         data, addr = self.sock.recvfrom(1024)
         return (data.decode('utf-8'))
 
+    def würfeln(self):
+        self.sende("ROLL;token")
+        return self.warte_auf_nachricht()
+
+    def ansagen(self,ansage):
+        self.sende("ANNOUNCE;"+ansage+";token")
+
+    def schauen(self):
+        self.sende("SEE;token")
+
+
+
+
+
+
 normaler_client = Maexchen_Client(server_ip="192.168.178.32")
 
 print("Die Ausgabe:", normaler_client.echo("Hello World"))
+
+#normaler_client.beitreten("Jannek")
