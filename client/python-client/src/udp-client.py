@@ -44,4 +44,6 @@ normaler_client = Maexchen_Client(server_ip="192.168.178.32")
 
 print("Die Ausgabe:", normaler_client.echo("Hello World"))
 
-#normaler_client.beitreten("Jannek")
+normaler_client.beitreten("Jannek")
+while True:
+    print (normaler_client.warte_auf_nachricht())
