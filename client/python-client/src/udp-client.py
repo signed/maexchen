@@ -12,7 +12,7 @@ class Maexchen_Client:
         return self.sende(nachricht_kommando)
 
     def beitreten(self,name):
-        pass
+        self.sende("REGISTER;"+name)
 
     def sende(self,nachricht):
         self.sock.sendto(nachricht.encode('utf-8'), (self.server_ip, self.server_port))
