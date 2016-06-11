@@ -19,6 +19,6 @@ class Maexchen_Client:
         data, addr = self.sock.recvfrom(1024)
         return (data.decode('utf-8'))
 
-normaler_client = Maexchen_Client()
+normaler_client = Maexchen_Client(server_ip="192.168.178.32")
 
 print("Die Ausgabe:", normaler_client.echo("Hello World"))
