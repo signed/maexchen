@@ -35,10 +35,11 @@ class Maexchen_Client:
     def schauen(self):
         self.sende("SEE;token")
 
-normaler_client = Maexchen_Client(server_ip="192.168.178.32")
+if __name__ == "__main__":
+    normaler_client = Maexchen_Client(server_ip="127.0.0.1")
 
-print("Die Ausgabe:", normaler_client.echo("Hello World"))
+    print("Die Ausgabe:", normaler_client.echo("Hello World"))
 
-normaler_client.beitreten("Jannek")
-while True:
-    print (normaler_client.warte_auf_nachricht())
+    normaler_client.beitreten("Jannek")
+    while True:
+        print (normaler_client.warte_auf_nachricht())
