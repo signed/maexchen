@@ -40,8 +40,8 @@ class Server
 			player?.handleMessage messageCommand, messageArgs
 	
 	handleEcho: (text, connection) ->
-		log "echo: '#{text}'"
-		connection.sendMessage text
+		log "echoing: '#{text}'"
+		connection.sendMessage "ECHOING;" + text
 
 	handleRegistration: (name, connection, isSpectator) ->
 		newPlayer = @createPlayer name, connection
