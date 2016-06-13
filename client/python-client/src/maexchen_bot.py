@@ -1,5 +1,6 @@
 import signal
 import sys
+import socket
 
 from udp_kommunikator import UDP_Kommunikator
 
@@ -10,10 +11,14 @@ class Maexchen_Bot:
         self.kommunikator = UDP_Kommunikator(server_ip=server_ip, server_port=server_port)
 
     def warte_auf_nachricht(self):
-        return self.kommunikator.warte_auf_kommando()
+        try:
+            return self.kommunikator.warte_auf_kommando()
+        except socket.timeout:
+            print("Der Server", self.kommunikator.server_adresse(), "reagiert nicht. Bot wird beendet.")
+            sys.exit()
 
     def schicke_nachricht(self, nachricht, parameter):
-        print("Nachricht geschickt:", nachricht, parameter)
+        print("Nachricht schicken:", nachricht, parameter)
         self.kommunikator.sende_kommando(nachricht, parameter)
 
     def starte_spiel(self):

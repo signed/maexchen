@@ -2,10 +2,11 @@ import socket
 
 
 class UDP_Kommunikator:
-    def __init__(self, server_ip, server_port):
+    def __init__(self, server_ip, server_port, timeout=3.0):
         self.server_port = server_port
         self.server_ip = server_ip
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.settimeout(timeout)
 
     def sende_kommando(self, kommando, parameter):
         nachricht = kommando + ";" + ";".join(parameter)
@@ -18,3 +19,6 @@ class UDP_Kommunikator:
     def warte_auf_kommando(self):
         nachrichtenteile = self.warte_auf_nachricht().split(";")
         return (nachrichtenteile[0], nachrichtenteile[1:])
+
+    def server_adresse(self):
+        return self.server_ip + ":" + str(self.server_port)

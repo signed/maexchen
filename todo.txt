@@ -4,8 +4,7 @@ Server:
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
 
 Python Client:
-- Timeout wenn Server nicht antwortet.
 
-Doku für Python Bot Programmierer.
+- Doku für Python Bot Programmierer.
 
-Skript um Server und Spring-Spectator gemeinsam neu zu starten.
+- Skript um Server und Spring-Spectator gemeinsam neu zu starten.
