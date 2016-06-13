@@ -1,2 +1,4 @@
 #!/bin/sh
-node server.js
+./stop-server
+node server.js > server.out & echo $! > server.pid
+tail -f server.out
