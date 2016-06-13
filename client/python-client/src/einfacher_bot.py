@@ -7,8 +7,8 @@ class Einfacher_Bot(Maexchen_Bot):
         self.name = name
 
     def starte(self):
-        (antwort, parameter) = self.registriere_mich(self.name)
-        if (antwort == Nachrichten.REGISTRIERT):
+        (antwort, parameter) = self.melde_mich_an(self.name)
+        if (antwort == Nachrichten.ANGEMELDET):
             self.starte_spiel()
         else:
             print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
@@ -28,6 +28,9 @@ class Einfacher_Bot(Maexchen_Bot):
             augen = parameter[0]
             token = parameter[-1]
             self.schicke_nachricht(Nachrichten.ANSAGEN, [augen, token])
+
+    def reagiere_auf_stopp(self):
+        self.schicke_nachricht(Nachrichten.ABMELDEN, [self.name])
 
 if __name__ == "__main__":
     bot = Einfacher_Bot(name="simple-python-bot", server_ip="127.0.0.1")

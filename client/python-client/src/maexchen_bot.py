@@ -1,8 +1,12 @@
+import signal
+import sys
+
 from udp_kommunikator import UDP_Kommunikator
 
 
 class Maexchen_Bot:
     def __init__(self, server_ip="127.0.0.1", server_port=9000):
+        signal.signal(signal.SIGINT, self.signal_handler)
         self.kommunikator = UDP_Kommunikator(server_ip=server_ip, server_port=server_port)
 
     def warte_auf_nachricht(self):
@@ -20,14 +24,21 @@ class Maexchen_Bot:
     def reagiere_auf_kommando(self, kommando, parameter):
         pass
 
-    def registriere_mich(self, name):
-        self.kommunikator.sende_kommando(Nachrichten.REGISTRIEREN, [name])
+    def melde_mich_an(self, name):
+        self.schicke_nachricht(Nachrichten.ANMELDEN, [name])
         return self.warte_auf_nachricht()
+
+    def signal_handler(self, signal, frame):
+        self.reagiere_auf_stopp()
+        sys.exit()
+
+    def reagiere_auf_stopp(self):
+        pass
 
 
 class Nachrichten:
-    REGISTRIEREN = "REGISTER"
-    REGISTRIERT = "REGISTERED"
+    ANMELDEN = "REGISTER"
+    ANGEMELDET = "REGISTERED"
     NEUE_RUNDE = "ROUND STARTING"
     ICH_MACHE_MIT = "JOIN"
     DU_BIST_DRAN = "YOUR TURN"
@@ -35,3 +46,4 @@ class Nachrichten:
     GEWUERFELT = "ROLLED"
     ANSAGEN = "ANNOUNCE"
     SCHAUEN = "SEE"
+    ABMELDEN = "UNREGISTER"
