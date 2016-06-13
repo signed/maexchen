@@ -1,0 +1,11 @@
+Server:
+- Server spielt nur, wenn mindestens zwei Spieler registriert sind.
+- Spieler können sich auch wieder abmelden.
+- Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
+
+Python Client:
+- Bot kann gestoppt werden.
+
+Doku für Python Bot Programmierer.
+
+Skript um Server und Spring-Spectator gemeinsam neu zu starten.

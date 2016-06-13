@@ -1,4 +1,4 @@
-from maexchen_bot import Maexchen_Bot
+from maexchen_bot import Maexchen_Bot, Nachrichten
 
 
 class Einfacher_Bot(Maexchen_Bot):
@@ -7,17 +7,28 @@ class Einfacher_Bot(Maexchen_Bot):
         self.name = name
 
     def starte(self):
-        self.registriere_mich(self.name)
-        (kommando, parameter) = self.warte_auf_kommando()
-        if (kommando == "REGISTERED"):
-            self.erwarte_spiel_kommandos()
+        (antwort, parameter) = self.registriere_mich(self.name)
+        if (antwort == Nachrichten.REGISTRIERT):
+            self.starte_spiel()
         else:
-            print("Ich konnte mich nicht registrieren.", "Grund: " + kommando + str(parameter))
+            print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
 
-    def reagiere_auf_kommando(self, kommando, parameter):
-        print("Kommando empfangen: " + kommando, parameter)
+    def reagiere_auf_kommando(self, nachricht, parameter):
+        print("Nachricht empfangen:", nachricht, parameter)
 
+        if (nachricht == Nachrichten.NEUE_RUNDE):
+            token = parameter[-1]
+            self.schicke_nachricht(Nachrichten.ICH_MACHE_MIT, [token])
+
+        if (nachricht == Nachrichten.DU_BIST_DRAN):
+            token = parameter[-1]
+            self.schicke_nachricht(Nachrichten.WUERFELN, [token])
+
+        if (nachricht == Nachrichten.GEWUERFELT):
+            augen = parameter[0]
+            token = parameter[-1]
+            self.schicke_nachricht(Nachrichten.ANSAGEN, [augen, token])
 
 if __name__ == "__main__":
-    bot = Einfacher_Bot(name="simple-bot", server_ip="127.0.0.1")
+    bot = Einfacher_Bot(name="simple-python-bot", server_ip="127.0.0.1")
     bot.starte()
