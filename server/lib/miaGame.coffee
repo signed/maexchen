@@ -91,8 +91,6 @@ class MiaGame
 		@permuteRound(@currentRound)
 		@actualDice = null
 		@announcedDice = null
-		@currentRound.each (player) =>
-			@score.increaseFor player
 		@players.each (player) =>
 			player.roundStarted @roundNumber, @currentRound.players
 		if @currentRound.size() > 1
@@ -185,8 +183,9 @@ class MiaGame
 
 	playersLose: (losingPlayers, reason) ->
 		return if @stopped
-		for player in losingPlayers
-			@score.decreaseFor player
+		@currentRound.each (player) =>
+			if player not in losingPlayers
+				@score.increaseFor player
 		@players.each (player) ->
 			player.playerLost losingPlayers, reason
 		@broadcastScore()

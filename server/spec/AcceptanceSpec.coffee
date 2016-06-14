@@ -133,12 +133,12 @@ describe 'the Mia server', ->
 		afterEach ->
 			player.shutDown()
 
-		it 'should award the player a point without playing the round', ->
+		it 'should not award the player a point without playing the round', ->
 			player.receivesOfferToJoinRound()
 			player.joinsRound()
 			player.receivesNotificationThatRoundIsStarting 1, 'thePlayer'
 			player.receivesNotificationThatRoundWasCanceled 'ONLY_ONE_PLAYER'
-			player.receivesScores thePlayer: 1
+			player.receivesScores thePlayer: 0
 			
 			player.receivesOfferToJoinRound()
 

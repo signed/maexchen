@@ -245,15 +245,6 @@ describe 'Mia Game', ->
 			miaGame.startRound()
 			expect(miaGame.announcedDice).toBeNull()
 
-		it 'should award all participating players a point', ->
-			registerPlayers 1, 2
-			spyOn miaGame.score, 'increaseFor'
-			miaGame.currentRound.add player1
-			miaGame.startRound()
-			
-			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player1
-			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player2
-
 		it 'should immediately cancel rounds with only a single player', ->
 			registerPlayers 1
 			spyOn miaGame, 'cancelRound'
@@ -262,6 +253,15 @@ describe 'Mia Game', ->
 			miaGame.startRound()
 			expect(miaGame.cancelRound).toHaveBeenCalledWith 'ONLY_ONE_PLAYER'
 			expect(miaGame.nextTurn).not.toHaveBeenCalled()
+
+		it 'canceled rounds should not award points', ->
+			registerPlayers 1
+			spyOn miaGame, 'cancelRound'
+			spyOn miaGame.score, 'increaseFor'
+			miaGame.currentRound.add player1
+			miaGame.startRound()
+			expect(miaGame.cancelRound).toHaveBeenCalledWith 'ONLY_ONE_PLAYER'
+			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player1
 
 	describe 'cancel round', ->
 
@@ -604,12 +604,12 @@ describe 'Mia Game', ->
 			miaGame.currentRound.add player2
 			spyOn miaGame, 'newRound'
 
-		it 'should decrease the score', ->
-			spyOn miaGame.score, 'decreaseFor'
-			miaGame.playersLose [player1, player2], 'theReason'
-			expect(miaGame.score.decreaseFor).toHaveBeenCalledWith player1
-			expect(miaGame.score.decreaseFor).toHaveBeenCalledWith player2
-			expect(miaGame.score.decreaseFor).not.toHaveBeenCalledWith player3
+		it 'should increase the score for others', ->
+			spyOn miaGame.score, 'increaseFor'
+			miaGame.playersLose [player3], 'theReason'
+			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player1
+			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player2
+			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player3
 
 		it 'should broadcast player lost to all players', ->
 			spyOn player1, 'playerLost'
