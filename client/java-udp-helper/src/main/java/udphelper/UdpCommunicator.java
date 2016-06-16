@@ -22,6 +22,8 @@ public class UdpCommunicator {
 	private final Collection<MessageListener> listeners = new ArrayList<MessageListener>();
 	private final DatagramChannel channel;
 
+	private volatile boolean shouldStop = false;
+
 	/**
 	 * Constructs a UdpCommunicator and sets it up to communicate with a remote server.
 	 * 
@@ -70,6 +72,9 @@ public class UdpCommunicator {
 		SelectionKey selectionKey = channel.register(selector, SelectionKey.OP_READ);
 
 		for (;;) {
+		    if (shouldStop)
+		        break;
+
 			if (selector.select(ONE_SECOND) > 0) {
 				selector.selectedKeys().remove(selectionKey);
 				if (selectionKey.isReadable()) {
@@ -77,6 +82,15 @@ public class UdpCommunicator {
 				}
 			}
 		}
+
+		for (MessageListener listener : listeners) {
+			listener.onStop();
+		}
+
+	}
+
+	public void stop() {
+	    shouldStop = true;
 	}
 
 	public void addMessageListener(MessageListener listener) {

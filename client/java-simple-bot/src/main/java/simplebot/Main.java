@@ -14,6 +14,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
+
 		String serverHost = args[0];
 		int serverPort = Integer.parseInt(args[1]);
 		String clientName = args[2];
@@ -24,9 +25,13 @@ public class Main {
 		
 		UdpCommunicator communicator = new UdpCommunicator(serverHost, serverPort);
 		MessageListener bot = createBot(botType, clientName, communicator.getMessageSender());
+        addShutdownHook(communicator);
 		communicator.addMessageListener(bot);
 		communicator.listenForMessages();
 	}
+
+    private static void addShutdownHook(final UdpCommunicator communicator) {
+    }
 
 	private static MessageListener createBot(BotTypes botType, String clientName, MessageSender messageSender) {
 		if (botType == BotTypes.random) {
