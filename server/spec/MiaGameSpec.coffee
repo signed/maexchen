@@ -50,6 +50,13 @@ describe 'Mia Game', ->
 		expect(miaGame.players).toHavePlayer player1
 		expect(miaGame.players).toHavePlayer player2
 
+	it 'will set players to have score 0 after initial registration', ->
+		miaGame.registerPlayer player1
+		miaGame.registerPlayer player2
+
+		expect(miaGame.score.of(player1)).toBe 0
+		expect(miaGame.score.of(player2)).toBe 0
+
 	it 'accepts spectators to register', ->
 		expect(miaGame.players).not.toHavePlayer player1
 		miaGame.registerSpectator player1
@@ -69,6 +76,18 @@ describe 'Mia Game', ->
 
 		expect(miaGame.players).toHavePlayer newPlayer
 		expect(miaGame.players).not.toHavePlayer oldPlayer
+
+	it 'keeps score after reregistration of player with same name', ->
+		oldPlayer = name: 'theName'
+		newPlayer = name: 'theName'
+
+		miaGame.score.increaseFor(oldPlayer)
+		expect(miaGame.score.of(oldPlayer)).toBe 1
+
+		miaGame.registerPlayer oldPlayer
+		miaGame.registerPlayer newPlayer
+
+		expect(miaGame.score.of(newPlayer)).toBe 1
 
 	it 'delegates permute to the round', ->
 		round = permute: ->

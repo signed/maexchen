@@ -90,7 +90,8 @@ class RemotePlayer
 		@sendMessage "PLAYER LOST;#{playersString};#{reason}"
 
 	currentScore: (scores) ->
-		scoreString = ("#{name}:#{score}" for name, score of scores).join()
+		sortedPlayerNames = Object.keys(scores).sort (a, b) -> a > b
+		scoreString = ("#{name}:#{scores[name]}" for name in sortedPlayerNames).join()
 		@sendMessage "SCORE;#{scoreString}"
 
 	handleMessage: (messageCommand, messageArgs) ->

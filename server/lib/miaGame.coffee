@@ -56,7 +56,10 @@ class MiaGame
 		@roundNumber = 0
 		@startRoundsEarly = true
 
-	registerPlayer: (player) -> @players.add player
+	registerPlayer: (player) =>
+		@score.resetFor(player) if @score.of(player) == 0
+		@players.add player
+
 	registerSpectator: (player) ->
 		player.isSpectator = true
 		@players.add player

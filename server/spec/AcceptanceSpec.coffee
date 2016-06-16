@@ -98,7 +98,7 @@ describe 'the Mia server', ->
 			client.receivesNotificationThatRoundWasCanceled 'NO_PLAYERS'
 
 			client.receivesOfferToJoinRound()
-	
+
 	describe 'should not ask spectators to join rounds', ->
 
 		player = null
@@ -133,13 +133,12 @@ describe 'the Mia server', ->
 		afterEach ->
 			player.shutDown()
 
-		it 'should not award the player a point without playing the round', ->
+		it 'should cancel round if only one player joins', ->
 			player.receivesOfferToJoinRound()
 			player.joinsRound()
 			player.receivesNotificationThatRoundIsStarting 1, 'thePlayer'
 			player.receivesNotificationThatRoundWasCanceled 'ONLY_ONE_PLAYER'
-			player.receivesScores thePlayer: 0
-			
+
 			player.receivesOfferToJoinRound()
 
 	describe 'previously registered player registers again', ->
@@ -159,6 +158,7 @@ describe 'the Mia server', ->
 			otherPlayer.shutDown()
 
 		playRound = (player1, player2) ->
+			log("play round", player1, player2)
 			player1.isAskedToPlayATurn()
 			player1.rolls()
 			player1.receivesRolledDice dice.create(3, 1)
@@ -205,7 +205,7 @@ describe 'the Mia server', ->
 			eachPlayer.receivesOfferToJoinRound()
 			eachPlayer.joinsRound()
 			eachPlayer.receivesNotificationThatRoundIsStarting 1, 'client1', 'client2'
-			
+
 			client1.isAskedToPlayATurn()
 			client1.rolls()
 			eachPlayer.receivesNotificationThatPlayerRolls 'client1'
@@ -227,7 +227,7 @@ describe 'the Mia server', ->
 			eachPlayer.receivesOfferToJoinRound()
 			eachPlayer.joinsRound()
 			eachPlayer.receivesNotificationThatRoundIsStarting 1, 'client1', 'client2'
-			
+
 			client1.isAskedToPlayATurn()
 			client1.rolls()
 			serverRolls 4, 4

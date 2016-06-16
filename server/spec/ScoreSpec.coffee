@@ -31,6 +31,12 @@ describe 'Score', ->
 		currentScore.decreaseFor player1
 		expect(currentScore.of player1).toBe 0
 	
+	it 'should reset scores for individual players', ->
+		currentScore.increaseFor player1
+		currentScore.increaseFor player1
+		currentScore.resetFor player1
+		expect(currentScore.of player1).toBe 0
+
 	it 'should collect all scores', ->
 		currentScore.increaseFor player1
 		currentScore.increaseFor player2
