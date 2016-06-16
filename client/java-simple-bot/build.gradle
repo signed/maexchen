@@ -24,8 +24,14 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 	from javadoc.destinationDir
 }
 
-task run(type: JavaExec, dependsOn:classes, overwrite: true) {
+task runSimple(type: JavaExec, dependsOn:classes, overwrite: true) {
 	classpath = sourceSets.main.runtimeClasspath
 	main = 'simplebot.Main'
-	args 'localhost', 9000, 'simple-java-bot'
+	args 'localhost', 9000, 'simple-java-bot', 'simple'
+}
+
+task runRandom(type: JavaExec, dependsOn:classes, overwrite: true) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'simplebot.Main'
+	args 'localhost', 9000, 'random-java-bot', 'random'
 }
