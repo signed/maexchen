@@ -33,6 +33,10 @@ class PlayerList
 
 	realPlayers: -> @collect (player) -> !player.isSpectator?
 
+	eachSpectator: (fn) -> @spectators().forEach fn
+
+	spectators: -> @collect (player) -> player.isSpectator?
+
 	collect: (predicate) ->
 		player for player in @players when predicate(player)
 
@@ -63,6 +67,8 @@ class MiaGame
 	registerPlayer: (player) =>
 		@score.resetFor(player) if @score.of(player) == 0
 		@players.add player
+		@players.eachSpectator (spectator) =>
+		    spectator.currentScore(@score.all())
 
 	registerSpectator: (player) ->
 		player.isSpectator = true

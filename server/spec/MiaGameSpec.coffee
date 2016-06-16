@@ -50,6 +50,13 @@ describe 'Mia Game', ->
 		expect(miaGame.players).toHavePlayer player1
 		expect(miaGame.players).toHavePlayer player2
 
+	it 'announces score to spectators when new player registers', ->
+		spyOn player1, 'currentScore'
+		miaGame.registerSpectator player1
+		miaGame.registerPlayer player2
+
+		expect(player1.currentScore).toHaveBeenCalled()
+
 	it 'accepts players and spectators to unregister', ->
 		miaGame.registerPlayer player1
 		miaGame.registerSpectator player2
