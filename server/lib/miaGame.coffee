@@ -19,6 +19,10 @@ class PlayerList
 		@players = @collect (existingPlayer) -> existingPlayer.name != newPlayer.name
 		@players.push newPlayer
 
+	remove: (player) ->
+		index = @players.indexOf player
+		@players.splice index, 1 if index isnt -1
+
 	first: (fn) ->
 		return if @isEmpty()
 		fn @players[0]
@@ -63,6 +67,10 @@ class MiaGame
 	registerSpectator: (player) ->
 		player.isSpectator = true
 		@players.add player
+
+	unregister: (player) =>
+		@players.remove player
+
 	setBroadcastTimeout: (@broadcastTimeout) ->
 	setDiceRoller: (@diceRoller) ->
 	doNotStartRoundsEarly: -> @startRoundsEarly = false
@@ -72,13 +80,16 @@ class MiaGame
 
 	newRound: ->
 		return if @stopped
+
+		if @players.size() < 2
+			setTimeout (=> @newRound()), 500
+			return
+
 		@roundNumber++
 		@currentRound = round = new PlayerList
 		expirer = @startExpirer =>
 			return if @stopped
-			if @players.isEmpty()
-				@newRound()
-			else if round.isEmpty()
+			if round.isEmpty()
 				@cancelRound 'NO_PLAYERS'
 			else
 				@startRound()

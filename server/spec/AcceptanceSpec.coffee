@@ -84,62 +84,75 @@ describe 'the Mia server', ->
 
 	describe 'round setup', ->
 
-		client = null
+		client1 = client2 = null
 
 		beforeEach ->
-			client = setupFakeClient 'testClient'
+			client1 = setupFakeClient 'testClient1'
+			client2 = setupFakeClient 'testClient2'
 			runs -> game.start()
 
 		afterEach ->
-			client.shutDown()
+			client1.shutDown()
+			client2.shutDown()
 
-		it 'should keep trying to start a round while nobody joins', ->
-			client.receivesOfferToJoinRound()
-			client.receivesNotificationThatRoundWasCanceled 'NO_PLAYERS'
+		it 'should keep trying to start a round with at least two registered players while nobody joins', ->
+			client1.receivesOfferToJoinRound()
+			client1.receivesNotificationThatRoundWasCanceled 'NO_PLAYERS'
+			client2.receivesOfferToJoinRound()
+			client2.receivesNotificationThatRoundWasCanceled 'NO_PLAYERS'
 
-			client.receivesOfferToJoinRound()
+			client1.receivesOfferToJoinRound()
+			client1.receivesNotificationThatRoundWasCanceled 'NO_PLAYERS'
 
 	describe 'should not ask spectators to join rounds', ->
 
-		player = null
+		player1 = player2 = null
 		spectator = null
 
 		beforeEach ->
 			spectator = setupSpectator 'theSpectator'
-			player = setupFakeClient 'thePlayer'
+			player1 = setupFakeClient 'thePlayer1'
+			player2 = setupFakeClient 'thePlayer2'
 			runs -> game.start()
 
 		afterEach ->
 			spectator.shutDown()
-			player.shutDown()
+			player1.shutDown()
+			player2.shutDown()
 
 		it 'should not invite spectators to join rounds', ->
-			player.receivesOfferToJoinRound()
-			player.joinsRound()
+			player1.receivesOfferToJoinRound()
+			player1.joinsRound()
+			player2.receivesOfferToJoinRound()
+			player2.joinsRound()
 
-			player.receivesNotificationThatRoundIsStarting 1, 'thePlayer'
+			player1.receivesNotificationThatRoundIsStarting 1, 'thePlayer1', 'thePlayer2'
+			player2.receivesNotificationThatRoundIsStarting 1, 'thePlayer1', 'thePlayer2'
 
 			spectator.didNotReceiveOfferToJoinRound()
-			spectator.receivesNotificationThatRoundIsStarting 1, 'thePlayer'
+			spectator.receivesNotificationThatRoundIsStarting 1, 'thePlayer1', 'thePlayer2'
 
 	describe 'when only one player participates in a round', ->
 
-		player = null
+		player1 = player2 = null
 
 		beforeEach ->
-			player = setupFakeClient 'thePlayer'
+			player1 = setupFakeClient 'thePlayer1'
+			player2 = setupFakeClient 'thePlayer2'
 			runs -> game.start()
 
 		afterEach ->
-			player.shutDown()
+			player1.shutDown()
+			player2.shutDown()
 
 		it 'should cancel round if only one player joins', ->
-			player.receivesOfferToJoinRound()
-			player.joinsRound()
-			player.receivesNotificationThatRoundIsStarting 1, 'thePlayer'
-			player.receivesNotificationThatRoundWasCanceled 'ONLY_ONE_PLAYER'
+			player1.receivesOfferToJoinRound()
+			player2.receivesOfferToJoinRound()
+			player1.joinsRound()
+			player1.receivesNotificationThatRoundIsStarting 1, 'thePlayer1'
+			player1.receivesNotificationThatRoundWasCanceled 'ONLY_ONE_PLAYER'
 
-			player.receivesOfferToJoinRound()
+			player1.receivesOfferToJoinRound()
 
 	describe 'previously registered player registers again', ->
 

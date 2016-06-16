@@ -1,7 +1,15 @@
 Server:
-- Server spielt nur, wenn mindestens zwei Spieler registriert sind.
+- Bei Anmeldung eines Spielers wird score an alle Spectators übertragen
 - Spieler können sich auch wieder abmelden.
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
+
+Java Client:
+- Name: simple-java-bot
+- Meldet sich beim stoppen ab
+- Beendet sich bei Server-Timeout
+
+Spectator:
+- Beendet sich bei Server-Timeout (oder versucht sich dananch neu zu registrieren)
 
 Python Client:
 

@@ -50,6 +50,17 @@ describe 'Mia Game', ->
 		expect(miaGame.players).toHavePlayer player1
 		expect(miaGame.players).toHavePlayer player2
 
+	it 'accepts players and spectators to unregister', ->
+		miaGame.registerPlayer player1
+		miaGame.registerSpectator player2
+
+		miaGame.unregister player1
+		miaGame.unregister player2
+
+		expect(miaGame.players).not.toHavePlayer player1
+		expect(miaGame.players).not.toHavePlayer player2
+
+
 	it 'will set players to have score 0 after initial registration', ->
 		miaGame.registerPlayer player1
 		miaGame.registerPlayer player2
@@ -106,6 +117,15 @@ describe 'Mia Game', ->
 			miaGame.newRound()
 			expect(player1.willJoinRound).toHaveBeenCalled()
 			expect(player2.willJoinRound).toHaveBeenCalled()
+
+		it 'should not broadcast new round with only a single registered player', ->
+			spyOn player1, 'willJoinRound'
+			spyOn player2, 'willJoinRound'
+			miaGame.unregister player2
+
+			miaGame.newRound()
+			expect(player1.willJoinRound).not.toHaveBeenCalled()
+			expect(player2.willJoinRound).not.toHaveBeenCalled()
 
 		it 'should have player for current round when she wants to', ->
 			player1.willJoinRound = accept

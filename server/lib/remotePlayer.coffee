@@ -75,8 +75,11 @@ class RemotePlayer
 		@changeState new InactiveState
 		@sendMessage "ROUND CANCELED;#{reason}"
 
+	sortByName: (players) ->
+		return players.sort (a, b) -> a.name > b.name
+
 	roundStarted: (roundNumber, players) ->
-		playersString = (player.name for player in players).join()
+		playersString = (player.name for player in @sortByName(players)).join()
 		@sendMessage "ROUND STARTED;#{roundNumber};#{playersString}"
 
 	announcedDiceBy: (dice, player) ->
@@ -86,7 +89,7 @@ class RemotePlayer
 		@sendMessage "ACTUAL DICE;#{dice}"
 
 	playerLost: (players, reason) ->
-		playersString = (player.name for player in players).join()
+		playersString = (player.name for player in @sortByName(players)).join()
 		@sendMessage "PLAYER LOST;#{playersString};#{reason}"
 
 	currentScore: (scores) ->
