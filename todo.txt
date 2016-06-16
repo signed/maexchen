@@ -1,4 +1,5 @@
 Server:
+- Server wird bei "zu wenig joins" langsamer.
 - Bei Anmeldung eines Spielers wird score an alle Spectators übertragen
 - Spieler können sich auch wieder abmelden.
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
