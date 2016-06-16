@@ -2,8 +2,8 @@ from udp_kommunikator import UDP_Kommunikator
 
 
 def sende_und_empfange_echo(message):
-    maexchen.sende_kommando("ECHO", [message])
-    (kommando, paramter) = maexchen.warte_auf_kommando()
+    maexchen.sende_nachricht("ECHO", [message])
+    (kommando, paramter) = maexchen.warte_auf_nachricht()
 
     print("Kommando erhalten:", kommando)
     print("   mit Parametern:", paramter)

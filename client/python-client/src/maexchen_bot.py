@@ -12,33 +12,44 @@ class Maexchen_Bot:
 
     def warte_auf_nachricht(self):
         try:
-            return self.kommunikator.warte_auf_kommando()
+            (nachricht, parameter) = self.kommunikator.warte_auf_nachricht()
+            print("Nachricht empfangen:", nachricht, parameter)
+            return (nachricht, parameter)
         except socket.timeout:
             print("Der Server", self.kommunikator.server_adresse(), "reagiert nicht. Bot wird beendet.")
             sys.exit()
 
+    def starte(self, name):
+        self.name = name
+        self.schicke_nachricht(Nachrichten.ANMELDEN, [name])
+        (antwort, parameter) = self.warte_auf_nachricht()
+        if (antwort == Nachrichten.ANGEMELDET):
+            self.starte_spiel()
+        else:
+            print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
+
     def schicke_nachricht(self, nachricht, parameter):
         print("Nachricht schicken:", nachricht, parameter)
-        self.kommunikator.sende_kommando(nachricht, parameter)
+        self.kommunikator.sende_nachricht(nachricht, parameter)
 
     def starte_spiel(self):
         while (True):
-            kommando, parameter = self.warte_auf_nachricht()
-            self.reagiere_auf_kommando(kommando, parameter)
+            nachricht, parameter = self.warte_auf_nachricht()
+            if (nachricht == Nachrichten.NEUE_RUNDE):
+                token = parameter[-1]
+                self.schicke_nachricht(Nachrichten.ICH_MACHE_MIT, [token])
+            else:
+                self.reagiere_auf_nachricht(nachricht, parameter)
 
-    def reagiere_auf_kommando(self, kommando, parameter):
+    def reagiere_auf_nachricht(self, kommando, parameter):
         pass
-
-    def melde_mich_an(self, name):
-        self.schicke_nachricht(Nachrichten.ANMELDEN, [name])
-        return self.warte_auf_nachricht()
 
     def signal_handler(self, signal, frame):
         self.reagiere_auf_stopp()
         sys.exit()
 
     def reagiere_auf_stopp(self):
-        pass
+        self.schicke_nachricht(Nachrichten.ABMELDEN, [self.name])
 
 
 class Nachrichten:
@@ -52,3 +63,7 @@ class Nachrichten:
     ANSAGEN = "ANNOUNCE"
     SCHAUEN = "SEE"
     ABMELDEN = "UNREGISTER"
+    SPIELER_WUERFELT = "PLAYER ROLLS"
+    SPIELER_SAGT_AN ="ANNOUNCED"
+    SPIELER_VERLIERT ="PLAYER LOST"
+    SPIELSTAND = "SCORE"
