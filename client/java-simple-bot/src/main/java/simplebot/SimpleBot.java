@@ -16,6 +16,7 @@ public class SimpleBot implements MessageListener {
 
 	private void tryToSend(String message) {
 		try {
+		    System.out.println("---> " + message);
 			messageSender.send(message);
 		} catch (IOException e) {
 			System.err.println("Failed to send " + message + ": " + e.getMessage());
@@ -23,7 +24,7 @@ public class SimpleBot implements MessageListener {
 	}
 
 	public void onMessage(String message) {
-		System.out.println(message);
+		System.out.println("<--- " + message);
 		String[] parts = message.split(";");
 		if (parts[0].equals("ROUND STARTING")) {
 			tryToSend("JOIN;"+parts[1]);
