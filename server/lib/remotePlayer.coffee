@@ -44,6 +44,9 @@ class RemotePlayer
 	registered: ->
 		@sendMessage 'REGISTERED'
 	
+	heartbeat: ->
+		@sendMessage 'HEARTBEAT'
+
 	registrationRejected: (reason) ->
 		@sendMessage "REJECTED;#{reason}"
 

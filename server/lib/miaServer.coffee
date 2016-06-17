@@ -18,8 +18,15 @@ class Server
 		@players = {}
 		@udpSocket = dgram.createSocket 'udp4', handleRawMessage
 		@udpSocket.bind port
+		@heartbeat = @startHeartbeat()
 
 	enableLogging: -> log = console.log
+
+	startHeartbeat: ->
+		return setInterval () =>
+			for id, player of @players
+				player.heartbeat()
+		, 2000
 
 	handleMessage: (messageCommand, messageArgs, connection) ->
 		log "handleMessage '#{messageCommand}' '#{messageArgs}' from #{connection.id}"
@@ -65,6 +72,7 @@ class Server
 		null
 
 	shutDown: ->
+		clearInterval(@heartbeat)
 		@udpSocket.close()
 
 	playerFor: (connection) ->
