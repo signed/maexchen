@@ -1,6 +1,6 @@
 import signal
 import sys
-import socket
+from threading import Timer
 import random
 
 from udp_kommunikator import UDP_Kommunikator
@@ -11,27 +11,40 @@ def random_bot_name():
 
 
 class Maexchen_Bot:
-
     def __init__(self, server_ip="127.0.0.1", server_port=9000, name=random_bot_name()):
         self.name = name
+        self.watcher = None
         signal.signal(signal.SIGINT, self.signal_handler)
         self.kommunikator = UDP_Kommunikator(server_ip=server_ip, server_port=server_port)
 
     def warte_auf_nachricht(self):
-        try:
-            (nachricht, parameter) = self.kommunikator.warte_auf_nachricht()
-            print("<---- ", nachricht, parameter)
-            return (nachricht, parameter)
-        except socket.timeout:
-            print("Der Server", self.kommunikator.server_adresse(), "reagiert nicht. Bot wird beendet.")
-            self.reagiere_auf_stopp()
-            sys.exit()
+        (nachricht, parameter) = self.kommunikator.warte_auf_nachricht()
+        if (nachricht == None):
+            sys.exit(-1)
 
-    def starte(self, automatisch_mitspielen=True):
+        print("<---- ", nachricht, parameter)
+        return (nachricht, parameter)
+
+    def starte(self, automatisch_mitspielen=True, beobachte_herzschlag=True):
+        if beobachte_herzschlag:
+            self.restart_heartbeat_watcher()
+        self.melde_dich_an(automatisch_mitspielen, beobachte_herzschlag)
+
+    def restart_heartbeat_watcher(self):
+        if self.watcher is not None:
+            self.watcher.cancel()
+        self.watcher = Timer(5.0, self.kein_server_herzschlag_mehr)
+        self.watcher.start()
+
+    def kein_server_herzschlag_mehr(self):
+        print("Der Server", self.kommunikator.server_adresse(), "reagiert nicht. Bot wird beendet.")
+        self.kommunikator.close()
+
+    def melde_dich_an(self, automatisch_mitspielen, beobachte_herzschlag):
         self.schicke_nachricht(Nachrichten.ANMELDEN, [self.name])
         (antwort, parameter) = self.warte_auf_nachricht()
         if (antwort == Nachrichten.ANGEMELDET):
-            self.starte_spiel(automatisch_mitspielen)
+            self.starte_spiel(automatisch_mitspielen, beobachte_herzschlag)
         else:
             print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
 
@@ -39,9 +52,11 @@ class Maexchen_Bot:
         print("----> ", nachricht, parameter)
         self.kommunikator.sende_nachricht(nachricht, parameter)
 
-    def starte_spiel(self, automatisch_mitspielen=True):
+    def starte_spiel(self, automatisch_mitspielen, handle_heartbeat):
         while (True):
             nachricht, parameter = self.warte_auf_nachricht()
+            if handle_heartbeat and nachricht == Nachrichten.SERVER_HERZSCHLAG:
+                self.restart_heartbeat_watcher()
             if automatisch_mitspielen:
                 if (nachricht == Nachrichten.NEUE_RUNDE):
                     token = parameter[-1]
@@ -74,6 +89,7 @@ class Nachrichten:
     SCHAUEN = "SEE"
     ABMELDEN = "UNREGISTER"
     SPIELER_WUERFELT = "PLAYER ROLLS"
-    SPIELER_SAGT_AN ="ANNOUNCED"
-    SPIELER_VERLIERT ="PLAYER LOST"
+    SPIELER_SAGT_AN = "ANNOUNCED"
+    SPIELER_VERLIERT = "PLAYER LOST"
     SPIELSTAND = "SCORE"
+    SERVER_HERZSCHLAG = "HEARTBEAT"
