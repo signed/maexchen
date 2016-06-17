@@ -1,5 +1,5 @@
 Server:
-- Spieler können sich auch wieder abmelden.
+- Anmeldungen und Abmeldungen werden an alle gebroadcast: "NEW_PLAYER;name" + "PLAYER_LEFT;name".
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
 - Server wird bei "zu wenig joins" langsamer.
 
