@@ -15,5 +15,5 @@ class Einfacher_Bot(Maexchen_Bot):
 
 
 if __name__ == "__main__":
-    bot = Einfacher_Bot(server_ip="127.0.0.1")
-    bot.starte("simple-python-bot")
+    bot = Einfacher_Bot(server_ip="127.0.0.1", name="simple-python-bot")
+    bot.starte(automatisch_mitspielen=True)
