@@ -43,7 +43,7 @@ public class RandomBot implements MessageListener {
 
     @Override
 	public void onStop() {
-	    tryToSend("UNREGISTER;" + name);
+	    tryToSend("UNREGISTER");
 	}
 
 }

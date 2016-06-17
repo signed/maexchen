@@ -82,6 +82,11 @@ describe 'the Mia server', ->
 			client.sendPlayerRegistration()
 			client.receivesRegistrationConfirmation()
 
+		it 'should accept player unregistration', ->
+			client.sendPlayerRegistration()
+			client.sendPlayerUnregistration()
+			client.receivesUnregistrationConfirmation()
+
 	describe 'round setup', ->
 
 		client1 = client2 = null
@@ -341,11 +346,17 @@ class BaseFakeClient
 	sendPlayerRegistration: ->
 		@send "REGISTER;#{@name}"
 	
+	sendPlayerUnregistration: ->
+		@send "UNREGISTER"
+
 	sendSpectatorRegistration: ->
 		@send "REGISTER_SPECTATOR;#{@name}"
 
 	receivesRegistrationConfirmation: ->
 		@receives 'REGISTERED'
+
+	receivesUnregistrationConfirmation: ->
+		@receives 'UNREGISTERED'
 
 	receivesOfferToJoinRound: ->
 		@receivesWithAppendedToken "ROUND STARTING"

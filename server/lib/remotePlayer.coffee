@@ -44,6 +44,9 @@ class RemotePlayer
 	registered: ->
 		@sendMessage 'REGISTERED'
 	
+	unregistered: ->
+		@sendMessage 'UNREGISTERED'
+
 	heartbeat: ->
 		@sendMessage 'HEARTBEAT', false
 

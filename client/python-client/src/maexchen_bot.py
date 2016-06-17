@@ -50,7 +50,7 @@ class Maexchen_Bot:
         else:
             print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
 
-    def schicke_nachricht(self, nachricht, parameter):
+    def schicke_nachricht(self, nachricht, parameter=[]):
         print("----> ", nachricht, parameter)
         self.kommunikator.sende_nachricht(nachricht, parameter)
 
@@ -76,7 +76,7 @@ class Maexchen_Bot:
         sys.exit()
 
     def reagiere_auf_stopp(self):
-        self.schicke_nachricht(Nachrichten.ABMELDEN, [self.name])
+        self.schicke_nachricht(Nachrichten.ABMELDEN)
 
 
 class Nachrichten:

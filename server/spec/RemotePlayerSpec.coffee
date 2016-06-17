@@ -139,6 +139,10 @@ describe "remotePlayer", ->
 			player.registered()
 			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REGISTERED', true
 
+		it 'should send UNREGISTERED notifications', ->
+			player.unregistered()
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'UNREGISTERED', true
+
 		it 'should send REJECTED notifications', ->
 			player.registrationRejected 'forAReason'
 			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REJECTED;forAReason', true

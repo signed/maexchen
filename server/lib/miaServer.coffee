@@ -42,6 +42,9 @@ class Server
 		else if messageCommand == 'REGISTER_SPECTATOR'
 			name = messageArgs[0]
 			@handleRegistration name, connection, true
+		else if messageCommand == 'UNREGISTER'
+			player = @playerFor connection
+			@handleUnregistration player, connection
 		else
 			player = @playerFor connection
 			player?.handleMessage messageCommand, messageArgs
@@ -58,6 +61,11 @@ class Server
 			newPlayer.registrationRejected 'NAME_ALREADY_TAKEN'
 		else
 			@addPlayer connection, newPlayer, isSpectator
+
+	handleUnregistration: (player, connection) ->
+		delete @players[connection.id]
+		@game.unregister player
+		player.unregistered()
 
 	isValidName: (name) ->
 		name != '' and name.length <= 20 and not /[,;:\s]/.test name
