@@ -101,8 +101,9 @@ class Server
 			@socket.send buffer, 0, buffer.length, @port, @host
 	
 		createPlayer: (name) ->
-			sendMessageCallback = (message) =>
-				log "sending '#{message}' to #{name} (#{@id})"
+			sendMessageCallback = (message, withLogging) =>
+				if withLogging
+					log "sending '#{message}' to #{name} (#{@id})"
 				@sendMessage message
 			player = remotePlayer.create name, sendMessageCallback
 			

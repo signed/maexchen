@@ -45,7 +45,7 @@ class RemotePlayer
 		@sendMessage 'REGISTERED'
 	
 	heartbeat: ->
-		@sendMessage 'HEARTBEAT'
+		@sendMessage 'HEARTBEAT', false
 
 	registrationRejected: (reason) ->
 		@sendMessage "REJECTED;#{reason}"
@@ -103,8 +103,8 @@ class RemotePlayer
 	handleMessage: (messageCommand, messageArgs) ->
 		@currentState.handleMessage messageCommand, messageArgs
 
-	sendMessage: (message) ->
-		@sendMessageCallback message
+	sendMessage: (message, withLogging=true) ->
+		@sendMessageCallback message, withLogging
 
 	generateToken: ->
 		uuid()
