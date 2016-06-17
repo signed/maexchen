@@ -12,11 +12,8 @@ class UDP_Kommunikator:
         self.sock.sendto(nachricht.encode('utf-8'), (self.server_ip, self.server_port))
 
     def warte_auf_data(self):
-        try:
-            data, addr = self.sock.recvfrom(1024)
-            return data.decode('utf-8')
-        except:
-            return None
+        data, addr = self.sock.recvfrom(1024)
+        return data.decode('utf-8')
 
     def warte_auf_nachricht(self):
         data = self.warte_auf_data()

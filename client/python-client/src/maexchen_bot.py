@@ -1,7 +1,8 @@
 import signal
 import sys
-from threading import Timer
+import socket
 import random
+from threading import Timer
 
 from udp_kommunikator import UDP_Kommunikator
 
@@ -18,8 +19,10 @@ class Maexchen_Bot:
         self.kommunikator = UDP_Kommunikator(server_ip=server_ip, server_port=server_port)
 
     def warte_auf_nachricht(self):
-        (nachricht, parameter) = self.kommunikator.warte_auf_nachricht()
-        if (nachricht == None):
+        try:
+            (nachricht, parameter) = self.kommunikator.warte_auf_nachricht()
+        except socket.error:
+            print("Der Server", self.kommunikator.server_adresse(), "antwortet nicht. Bot wird beendet.")
             sys.exit(-1)
 
         print("<---- ", nachricht, parameter)
@@ -37,7 +40,6 @@ class Maexchen_Bot:
         self.watcher.start()
 
     def kein_server_herzschlag_mehr(self):
-        print("Der Server", self.kommunikator.server_adresse(), "reagiert nicht. Bot wird beendet.")
         self.kommunikator.close()
 
     def melde_dich_an(self, automatisch_mitspielen, beobachte_herzschlag):
