@@ -31,6 +31,11 @@ public class Main {
 	}
 
     private static void addShutdownHook(final UdpCommunicator communicator) {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                communicator.stop();
+            }
+		});
     }
 
 	private static MessageListener createBot(BotTypes botType, String clientName, MessageSender messageSender) {

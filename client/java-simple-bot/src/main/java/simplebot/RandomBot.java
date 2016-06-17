@@ -8,8 +8,10 @@ import udphelper.MessageSender;
 public class RandomBot implements MessageListener {
 
 	private final MessageSender messageSender;
+	private final String name;
 
 	public RandomBot(String name, MessageSender messageSender) {
+		this.name = name;
 		this.messageSender = messageSender;
 		tryToSend("REGISTER;" + name);
 	}
@@ -37,6 +39,11 @@ public class RandomBot implements MessageListener {
 		} else if (parts[0].equals("ROLLED")) {
 			tryToSend("ANNOUNCE;" + parts[1] + ";" + parts[2]);
 		}
+	}
+
+    @Override
+	public void onStop() {
+	    tryToSend("UNREGISTER;" + name);
 	}
 
 }

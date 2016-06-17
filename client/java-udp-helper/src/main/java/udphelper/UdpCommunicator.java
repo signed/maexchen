@@ -83,14 +83,14 @@ public class UdpCommunicator {
 			}
 		}
 
-		for (MessageListener listener : listeners) {
-			listener.onStop();
-		}
-
 	}
 
 	public void stop() {
 	    shouldStop = true;
+
+		for (MessageListener listener : listeners) {
+			listener.onStop();
+		}
 	}
 
 	public void addMessageListener(MessageListener listener) {
