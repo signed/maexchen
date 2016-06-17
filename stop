@@ -1,0 +1,8 @@
+#!/bin/sh
+pushd server > /dev/null
+./stop-server
+popd > /dev/null
+
+pushd client/swing-spectator > /dev/null
+./stop-spectator
+popd > /dev/null

@@ -11,7 +11,4 @@ Spectator:
 - Beendet sich bei Server-Timeout (oder versucht sich dananch neu zu registrieren)
 
 Python Client:
-
 - Doku für Python Bot Programmierer.
-
-- Skript um Server und Spring-Spectator gemeinsam neu zu starten.

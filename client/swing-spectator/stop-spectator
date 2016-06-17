@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ -f spectator.pid ]
+then
+    pid=`cat spectator.pid`
+    echo "Trying to shut down spectator with pid" $pid "..."
+    kill -9 $pid &> /dev/null
+    if [ $? -ne 0 ];
+    then
+        echo "No process matching pid" $pid"."
+    else
+        echo "Spectator with pid" $pid "has been shut down."
+    fi
+    rm spectator.pid
+fi

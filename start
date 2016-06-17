@@ -1,0 +1,10 @@
+#!/bin/sh
+pushd server > /dev/null
+./start-server &
+popd
+
+pushd client/swing-spectator > /dev/null
+./start-spectator &
+popd
+
+cat ''

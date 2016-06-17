@@ -1,3 +1,5 @@
 #!/bin/sh
+./stop-spectator
 CLASSPATH=./build/libs/swing-spectator.jar:../java-udp-helper/build/libs/udp-helper-1.0.jar
-java -cp $CLASSPATH spectator.Main 'localhost' 9000
+java -cp $CLASSPATH spectator.Main 'localhost' 9000 &
+echo $! > spectator.pid
