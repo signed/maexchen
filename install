@@ -1,0 +1,16 @@
+#!/bin/sh
+pushd server
+npm install
+popd
+
+pushd client/java-udp-helper
+gradle install
+popd
+
+pushd client/swing-spectator
+gradle install
+popd
+
+pushd client/java-simple-bot
+gradle install
+popd
