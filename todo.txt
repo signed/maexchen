@@ -1,14 +1,13 @@
 Server:
-- Server wird bei "zu wenig joins" langsamer.
 - Spieler können sich auch wieder abmelden.
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
+- Server wird bei "zu wenig joins" langsamer.
 
 Java Client:
-- Meldet sich beim stoppen ab
-- Beendet sich bei Server-Timeout
+- Beendet sich bei fehlendem Server-Heartbeat
 
 Spectator:
-- Beendet sich bei Server-Timeout (oder versucht sich dananch neu zu registrieren)
+- Versucht sich bei fehlendem Server-Heartbeat in größer werdenden Abständen neu zu registrieren
 
 Python Client:
 - Doku für Python Bot Programmierer.
