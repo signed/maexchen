@@ -1,4 +1,4 @@
-from udp_kommunikator import UDP_Kommunikator
+from udp_kommunikator import UdpKommunikator
 
 
 def sende_und_empfange_echo(message):
@@ -12,7 +12,7 @@ def sende_und_empfange_echo(message):
 udp_ip = "127.0.0.1"
 udp_port = 9000
 
-maexchen = UDP_Kommunikator(server_ip=udp_ip, server_port=udp_port)
+maexchen = UdpKommunikator(server_ip=udp_ip, server_port=udp_port)
 
 for index in range(10):
     sende_und_empfange_echo("Hallo: " + str(index))

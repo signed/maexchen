@@ -4,19 +4,19 @@ import socket
 import random
 from threading import Timer
 
-from udp_kommunikator import UDP_Kommunikator
+from udp_kommunikator import UdpKommunikator
 
 
 def random_bot_name():
     return "python-bot-" + str(random.randint(100, 999))
 
 
-class Maexchen_Bot:
+class MaexchenBot:
     def __init__(self, server_ip="127.0.0.1", server_port=9000, name=random_bot_name()):
         self.name = name
         self.watcher = None
         signal.signal(signal.SIGINT, self.signal_handler)
-        self.kommunikator = UDP_Kommunikator(server_ip=server_ip, server_port=server_port)
+        self.kommunikator = UdpKommunikator(server_ip=server_ip, server_port=server_port)
 
     def warte_auf_nachricht(self):
         try:
@@ -82,6 +82,9 @@ class Maexchen_Bot:
 class Nachrichten:
     ANMELDEN = "REGISTER"
     ANGEMELDET = "REGISTERED"
+    ABMELDEN = "UNREGISTER"
+    ABGEMELDET = "UNREGISTERED"
+
     NEUE_RUNDE = "ROUND STARTING"
     ICH_MACHE_MIT = "JOIN"
     DU_BIST_DRAN = "YOUR TURN"
@@ -89,9 +92,9 @@ class Nachrichten:
     GEWUERFELT = "ROLLED"
     ANSAGEN = "ANNOUNCE"
     SCHAUEN = "SEE"
-    ABMELDEN = "UNREGISTER"
     SPIELER_WUERFELT = "PLAYER ROLLS"
     SPIELER_SAGT_AN = "ANNOUNCED"
     SPIELER_VERLIERT = "PLAYER LOST"
     SPIELSTAND = "SCORE"
+
     SERVER_HERZSCHLAG = "HEARTBEAT"
