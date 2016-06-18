@@ -7,4 +7,8 @@ pushd client/swing-spectator > /dev/null
 ./start-spectator &
 popd
 
-cat ''
+function ctrl_c() {
+   ./stop
+}
+
+(trap ctrl_c SIGHUP SIGINT SIGTERM; sleep 86400 ;)
