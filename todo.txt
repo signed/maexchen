@@ -10,5 +10,4 @@ Spectator:
 - Versucht sich bei fehlendem Server-Heartbeat in größer werdenden Abständen neu zu registrieren
 
 Python Client:
-- Java Random Bot übertragen.
 - Doku für Python Bot Programmierer.
