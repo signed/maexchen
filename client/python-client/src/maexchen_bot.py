@@ -78,6 +78,35 @@ class MaexchenBot:
     def reagiere_auf_stopp(self):
         self.schicke_nachricht(Nachrichten.ABMELDEN)
 
+    def zerlege_wuerfel(self, wuerfel_string):
+        list_of_wuerfel = wuerfel_string.split(',')
+        return [int(augen) for augen in list_of_wuerfel]
+
+    def fuege_wuerfel_zusammen(self, wuerfel):
+        gewuerfelte_augen_als_strings = [str(wuerfel) for wuerfel in wuerfel]
+        return ','.join(gewuerfelte_augen_als_strings)
+
+    def ist_hoeher(self, wuerfel_1, wuerfel_2):
+        if self.ist_maexchen(wuerfel_1):
+            return True
+        if self.ist_maexchen(wuerfel_2):
+            return False
+
+        if self.ist_pasch(wuerfel_1):
+            if not self.ist_pasch(wuerfel_2):
+                return True
+        if self.ist_pasch(wuerfel_2):
+            if not self.ist_pasch(wuerfel_1):
+                return False
+
+        return wuerfel_1 > wuerfel_2
+
+    def ist_maexchen(self, wuerfel):
+        return wuerfel == [2, 1]
+
+    def ist_pasch(self, wuerfel):
+        return wuerfel[0] == wuerfel[1]
+
 
 class Nachrichten:
     ANMELDEN = "REGISTER"
