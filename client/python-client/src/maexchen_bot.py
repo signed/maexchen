@@ -78,9 +78,9 @@ class MaexchenBot:
     def reagiere_auf_stopp(self):
         self.schicke_nachricht(Nachrichten.ABMELDEN)
 
-    def zerlege_wuerfel(self, wuerfel_string):
+    def zerlege_wuerfel_string(self, wuerfel_string):
         list_of_wuerfel = wuerfel_string.split(',')
-        return [int(augen) for augen in list_of_wuerfel]
+        return [int(augenzahl) for augenzahl in list_of_wuerfel]
 
     def fuege_wuerfel_zusammen(self, wuerfel):
         gewuerfelte_augen_als_strings = [str(wuerfel) for wuerfel in wuerfel]

@@ -10,7 +10,7 @@ class RationalerBot(MaexchenBot):
             self.angesagte_wuerfelzahl = [1, 0] # Niedrigster Würfelwert
 
         if (nachricht == Nachrichten.SPIELER_SAGT_AN):
-            self.angesagte_wuerfelzahl = self.zerlege_wuerfel(parameter[-1])
+            self.angesagte_wuerfelzahl = self.zerlege_wuerfel_string(parameter[-1])
 
         if (nachricht == Nachrichten.DU_BIST_DRAN):
             token = parameter[-1]
@@ -22,7 +22,7 @@ class RationalerBot(MaexchenBot):
 
         if (nachricht == Nachrichten.GEWUERFELT):
             token = parameter[-1]
-            gewuerfelte_augen = self.zerlege_wuerfel(parameter[0])
+            gewuerfelte_augen = self.zerlege_wuerfel_string(parameter[0])
             if self.ist_hoeher(gewuerfelte_augen, self.angesagte_wuerfelzahl):
                 self.sage_an(gewuerfelte_augen, token)
             else:
