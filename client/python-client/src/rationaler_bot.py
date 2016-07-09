@@ -3,14 +3,12 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 
 class RationalerBot(MaexchenBot):
-    def __init__(self):
-        MaexchenBot.__init__(self)
-        self.angesagte_wuerfelzahl=[]
+    angesagte_wuerfelzahl = [1, 0]  # Niedrigster Würfelwert
 
     def reagiere_auf_nachricht(self, nachricht, parameter):
 
         if (nachricht == Nachrichten.NEUE_RUNDE):
-            self.angesagte_wuerfelzahl = [1, 0] # Niedrigster Würfelwert
+            angesagte_wuerfelzahl = [1, 0] # Niedrigster Würfelwert
 
         if (nachricht == Nachrichten.SPIELER_SAGT_AN):
             self.angesagte_wuerfelzahl = self.zerlege_wuerfel_string(parameter[-1])
