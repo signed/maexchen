@@ -3,6 +3,8 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 
 class RationalerBot(MaexchenBot):
+    def __init__(self):
+        MaexchenBot
 
     def reagiere_auf_nachricht(self, nachricht, parameter):
 

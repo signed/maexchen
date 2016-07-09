@@ -44,5 +44,5 @@ class EinfacherBot(MaexchenBot):
             return [1, 1]
 
 if __name__ == "__main__":
-    bot = MatthiasBot(server_ip="127.0.0.1", name="simple-python-bot")
+    bot = EinfacherBot(server_ip="127.0.0.1", name="matthis-bot")
     bot.starte(automatisch_mitspielen=True)
