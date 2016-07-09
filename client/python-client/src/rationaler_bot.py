@@ -4,7 +4,8 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 class RationalerBot(MaexchenBot):
     def __init__(self):
-        MaexchenBot
+        MaexchenBot.__init__(self)
+        self.angesagte_wuerfelzahl=[]
 
     def reagiere_auf_nachricht(self, nachricht, parameter):
 
