@@ -2,20 +2,20 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 
 class EinfacherBot(MaexchenBot):
-    def __init__(self,server_ip,name):
-        super().__init__(server_ip,name)
+    def __init__(self, server_ip, name):
+        super().__init__(server_ip=server_ip, name=name)
         self.angesagt = ("")
         self.vorherangesagt = ("")
-        self.vorherigeSpieler=0
+        self.vorherigeSpieler = 0
+
     def reagiere_auf_nachricht(self, nachricht, parameter):
-        if (nachricht==Nachrichten.NEUE_RUNDE):
+        if (nachricht == Nachrichten.NEUE_RUNDE):
             self.zaehleSpieler(True)
 
-
-        if (nachricht==Nachrichten.SPIELER_SAGT_AN):
-            self.vorherangesagt=self.angesagt
-            self.angesagt=nachricht
-            print (self.angesagt)
+        if (nachricht == Nachrichten.SPIELER_SAGT_AN):
+            self.vorherangesagt = self.angesagt
+            self.angesagt = nachricht
+            print(self.angesagt)
             self.zaehleSpieler(False)
 
         if (nachricht == Nachrichten.DU_BIST_DRAN):
@@ -27,11 +27,11 @@ class EinfacherBot(MaexchenBot):
             token = parameter[-1]
             self.schicke_nachricht(Nachrichten.ANSAGEN, [gewuerfelte_augen, token])
 
-    def zaehleSpieler(self,noch_ein_spieler):
-        if noch_ein_spieler==False:
-            self.vorherigeSpieler=0
+    def zaehleSpieler(self, noch_ein_spieler):
+        if noch_ein_spieler == False:
+            self.vorherigeSpieler = 0
         else:
-            self.vorherigeSpieler+=1
+            self.vorherigeSpieler += 1
 
 
 if __name__ == "__main__":
