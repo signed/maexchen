@@ -2,8 +2,8 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 
 class EinfacherBot(MaexchenBot):
-    def __init__(self):
-        MaexchenBot.__init__(self)
+    def __init__(self,server_ip,name):
+        super().__init__(server_ip,name)
         self.angesagt = ("")
         self.vorherangesagt = ("")
         self.vorherigeSpieler=0
@@ -27,8 +27,8 @@ class EinfacherBot(MaexchenBot):
             token = parameter[-1]
             self.schicke_nachricht(Nachrichten.ANSAGEN, [gewuerfelte_augen, token])
 
-    def zaehleSpieler(self,neue_runde):
-        if neue_runde==True:
+    def zaehleSpieler(self,noch_ein_spieler):
+        if noch_ein_spieler==False:
             self.vorherigeSpieler=0
         else:
             self.vorherigeSpieler+=1
