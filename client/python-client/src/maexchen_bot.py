@@ -60,7 +60,7 @@ class MaexchenBot:
             if handle_heartbeat and nachricht == Nachrichten.SERVER_HERZSCHLAG:
                 self.restart_heartbeat_watcher()
             if automatisch_mitspielen:
-                if (nachricht == Nachrichten.NEUE_RUNDE):
+                if (nachricht == Nachrichten.MACHST_DU_MIT):
                     token = parameter[-1]
                     self.schicke_nachricht(Nachrichten.ICH_MACHE_MIT, [token])
                 else:
@@ -114,8 +114,9 @@ class Nachrichten:
     ABMELDEN = "UNREGISTER"
     ABGEMELDET = "UNREGISTERED"
 
-    NEUE_RUNDE = "ROUND STARTING"
+    MACHST_DU_MIT = "ROUND STARTING"
     ICH_MACHE_MIT = "JOIN"
+    NEUE_RUNDE = "ROUND STARTED"
     DU_BIST_DRAN = "YOUR TURN"
     WUERFELN = "ROLL"
     GEWUERFELT = "ROLLED"
