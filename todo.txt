@@ -1,6 +1,4 @@
 Server:
-- Die Reihenfolge der Spieler (ROUND_STARTED message) sollte zufällig sein. Im Augenblick scheint die Reihenfolge immer
-  alphabetisch zu sein.
 - Beim Beenden des Servers wird der Spielstand auf Console ausgegeben
 - Anmeldungen und Abmeldungen werden an alle gebroadcast: "NEW_PLAYER;name" + "PLAYER_LEFT;name".
 - Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.

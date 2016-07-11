@@ -82,10 +82,10 @@ class RemotePlayer
 		@sendMessage "ROUND CANCELED;#{reason}"
 
 	sortByName: (players) ->
-		return players.sort (a, b) -> a.name > b.name
+		return players.slice(0).sort (a, b) -> a.name > b.name
 
 	roundStarted: (roundNumber, players) ->
-		playersString = (player.name for player in @sortByName(players)).join()
+		playersString = (player.name for player in players).join()
 		@sendMessage "ROUND STARTED;#{roundNumber};#{playersString}"
 
 	announcedDiceBy: (dice, player) ->
