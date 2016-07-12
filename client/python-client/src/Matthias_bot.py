@@ -19,7 +19,6 @@ class EinfacherBot(MaexchenBot):
                 self.schicke_nachricht(Nachrichten.WUERFELN, [token])
 
         if (nachricht == Nachrichten.GEWUERFELT):
-            gewuerfelte_augen = parameter[0]
             token = parameter[-1]
             gewuerfelte_augen = self.zerlege_wuerfel_string(parameter[0])
             if self.ist_hoeher(gewuerfelte_augen, self.angesagte_wuerfelzahl):
@@ -44,5 +43,5 @@ class EinfacherBot(MaexchenBot):
             return [1, 1]
 
 if __name__ == "__main__":
-    bot = EinfacherBot(server_ip="127.0.0.1", name="matthis-bot")
+    bot = EinfacherBot(server_ip="127.0.0.1", name="matthias-bot")
     bot.starte(automatisch_mitspielen=True)
