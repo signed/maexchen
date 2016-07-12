@@ -11,4 +11,5 @@ Spectator:
 - Versucht sich bei fehlendem Server-Heartbeat in größer werdenden Abständen neu zu registrieren
 
 Python Client:
+- MaexchenBot: Exception wenn parameter bei schicke_nachricht keine Liste ist
 - Doku für Python Bot Programmierer.
