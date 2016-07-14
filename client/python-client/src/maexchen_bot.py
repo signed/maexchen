@@ -50,9 +50,11 @@ class MaexchenBot:
         else:
             print("Ich konnte mich nicht registrieren.", "Grund: " + antwort + str(parameter))
 
-    def schicke_nachricht(self, nachricht, parameter=[]):
-        print("----> ", nachricht, parameter)
-        self.kommunikator.sende_nachricht(nachricht, parameter)
+    def schicke_nachricht(self, nachricht, nachrichten_parameter=[]):
+        if not isinstance(nachrichten_parameter, (list, tuple)):
+            raise Exception("'nachrichten_parameter' muss eine Liste oder ein Tupel sein!")
+        print("----> ", nachricht, nachrichten_parameter)
+        self.kommunikator.sende_nachricht(nachricht, nachrichten_parameter)
 
     def starte_spiel(self, automatisch_mitspielen, handle_heartbeat):
         while (True):

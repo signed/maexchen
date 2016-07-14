@@ -8,6 +8,7 @@ class UdpKommunikator:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def sende_nachricht(self, kommando, parameter):
+        assert isinstance(parameter, (list, tuple))
         nachricht = kommando + ";" + ";".join(parameter)
         self.sock.sendto(nachricht.encode('utf-8'), (self.server_ip, self.server_port))
 
