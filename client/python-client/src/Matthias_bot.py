@@ -6,7 +6,7 @@ class EinfacherBot(MaexchenBot):
 
         if (nachricht == Nachrichten.NEUE_RUNDE):
             self.angesagte_wuerfelzahl = [1, 3]  # Niedrigster Würfelwert zu Beginn der Runde
-            self.zaehleSpieler(True)
+            self.vorherigeSpieler = 0
 
         if (nachricht == Nachrichten.SPIELER_SAGT_AN):
             self.angesagte_wuerfelzahl = self.zerlege_wuerfel_string(parameter[-1])
@@ -16,7 +16,7 @@ class EinfacherBot(MaexchenBot):
             token = parameter[-1]
             erwartungswert_wuerfel = [6, 5]
             if self.ist_hoeher(self.angesagte_wuerfelzahl, erwartungswert_wuerfel):
-                if (self.zaehleSpieler <= 5 )
+                if (self.vorherigeSpieler >= 5 ):
                     self.schicke_nachricht(Nachrichten.SCHAUEN, [token])
                 else:
                     self.schicke_nachricht(Nachrichten.WUERFELN, [token])
@@ -32,11 +32,8 @@ class EinfacherBot(MaexchenBot):
             else:
                 self.luege(token)
 
-    def zaehleSpieler(self,neue_runde):
-        if neue_runde==True:
-            self.vorherigeSpieler=0
-        else:
-            self.vorherigeSpieler+=1
+    def zaehleSpieler(self):
+        self.vorherigeSpieler+=1
 
     def luege(self, token):
         gelogenen_augen = self.hoeher_als_angesagt()

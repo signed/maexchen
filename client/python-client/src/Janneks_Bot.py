@@ -83,15 +83,29 @@ class EinfacherBot(MaexchenBot):
         else:
             self.würfle(token)
 
-    def ansagen_analyse(self,spieler):
+    def ansagen_analyse(self, spieler):
         pass
-
 
     def schaue(self, token):
         self.schicke_nachricht(Nachrichten.SCHAUEN, [token])
 
     def würfle(self, token):
         self.schicke_nachricht(Nachrichten.WUERFELN, [token])
+
+
+class Spieler():
+    def __init__(self):
+        self.würfeanzahlen = {}
+        möglichewerte = [1, 2, 3,4, 5, 6]
+        for ersten_würfel in möglichewerte:
+            for zweiten_würfel in möglichewerte:
+                self.würfeanzahlen[(ersten_würfel, zweiten_würfel)] = 0
+
+    def merke_Würfel(self, wurf):
+        self.würfeanzahlen[wurf]+=1
+
+    def gebe_würfelanzahl(self,wurf):
+        return self.würfeanzahlen[wurf]
 
 
 if __name__ == "__main__":
