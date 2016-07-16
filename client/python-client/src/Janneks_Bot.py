@@ -83,6 +83,10 @@ class EinfacherBot(MaexchenBot):
         else:
             self.würfle(token)
 
+    def ansagen_analyse(self,spieler):
+        pass
+
+
     def schaue(self, token):
         self.schicke_nachricht(Nachrichten.SCHAUEN, [token])
 
