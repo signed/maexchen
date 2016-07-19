@@ -3,7 +3,7 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 class EinfacherBot(MaexchenBot):
     def __init__(self, server_ip, name):
-        super().__init__(server_ip, name)
+        super().__init__(server_ip,9000, name)
         self.spieler = []
         self.gespielteRunden=0
 
@@ -23,25 +23,26 @@ class EinfacherBot(MaexchenBot):
             for einzelSpieler in self.spieler:
                 if einzelSpieler.name == parameter[0]:
                     spielerinspieler = True
-                    aktuellerSpieler=einzelSpieler
+                    aktuellerSpieler=self.spieler.index(einzelSpieler)
 
             if spielerinspieler is False:
-                aktuellerSpieler=Spieler(parameter)
-                self.spieler.append(aktuellerSpieler)
-            aktuellerSpieler.merke_Würfel(self.angesagt)
+                self.spieler.append(Spieler(parameter[0]))
+                aktuellerSpieler = -1
+            self.spieler[aktuellerSpieler].merke_Würfel(self.angesagt)
             self.vorherigerSpieler=aktuellerSpieler
+
         if (nachricht == Nachrichten.DU_BIST_DRAN):
             token = parameter[-1]
-            if self.vorherigeSpieler >= 2:
-                if self.ist_pasch(self.angesagt) is False:
-                    self.differenz_analyse(token)
-                else:
-                    self.vorherigeSpieler_analyse(token)
+            #if self.vorherigeSpieler >= 2:
+                #if self.ist_pasch(self.angesagt) is False:
+                    #self.differenz_analyse(token)
+                #else:
+                    #self.vorherigeSpieler_analyse(token)
+            #else:
+            if self.gespielteRunden>=200 and self.vorherigeSpieler>=1:
+                self.ansagen_analyse(token,self.spieler[self.vorherigerSpieler])
             else:
-                if self.gespielteRunden>=200:
-                    self.ansagen_analyse(token,self.vorherigerSpieler)
-                else:
-                    self.erwartungswert_analyse(token)
+                self.erwartungswert_analyse(token)
 
         if (nachricht == Nachrichten.GEWUERFELT):
             token = parameter[-1]
@@ -128,16 +129,18 @@ class Spieler():
         möglichewerte = [1, 2, 3, 4, 5, 6]
         for ersten_würfel in möglichewerte:
             for zweiten_würfel in möglichewerte:
-                self.würfeanzahlen[(ersten_würfel, zweiten_würfel)] = 0
+                if ersten_würfel>=zweiten_würfel:
+                    self.würfeanzahlen[(ersten_würfel, zweiten_würfel)] = 0
         self.name = name
         self.ansagenanzahl=0
 
     def merke_Würfel(self, wurf):
-        self.würfeanzahlen[wurf] += 1
+        print (self.würfeanzahlen,len(self.würfeanzahlen))
+        self.würfeanzahlen[tuple(wurf)] = self.würfeanzahlen[tuple(wurf)]+1
         self.ansagenanzahl+=1
 
     def gebe_würfelanzahl(self, wurf):
-        return self.würfeanzahlen[wurf]
+        return self.würfeanzahlen[tuple(wurf)]
 
 
 if __name__ == "__main__":
