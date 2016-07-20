@@ -3,44 +3,31 @@ from maexchen_bot import MaexchenBot, Nachrichten
 
 class EinfacherBot(MaexchenBot):
     def __init__(self, server_ip, name):
-        super().__init__(server_ip,9000, name)
+        super().__init__(server_ip, 9000, name)
         self.spieler = []
-        self.gespielteRunden=0
+        self.gespielteRunden = 0
 
     def reagiere_auf_nachricht(self, nachricht, parameter):
         if (nachricht == Nachrichten.NEUE_RUNDE):
             self.vorherigeSpieler = 0
             self.angesagt = [1, 0]
             self.vorherangesagt = [1, 0]
-            self.gespielteRunden+=1
+            self.gespielteRunden += 1
 
         if (nachricht == Nachrichten.SPIELER_SAGT_AN):
-            self.vorherangesagt = self.angesagt
-            self.angesagt = self.zerlege_wuerfel_string(parameter[-1])
-            self.zaehleSpieler()
-            spielerinspieler = False
-            aktuellerSpieler=None
-            for einzelSpieler in self.spieler:
-                if einzelSpieler.name == parameter[0]:
-                    spielerinspieler = True
-                    aktuellerSpieler=self.spieler.index(einzelSpieler)
-
-            if spielerinspieler is False:
-                self.spieler.append(Spieler(parameter[0]))
-                aktuellerSpieler = -1
-            self.spieler[aktuellerSpieler].merke_Würfel(self.angesagt)
-            self.vorherigerSpieler=aktuellerSpieler
-
+            self.spielerSagtAn(parameter)
         if (nachricht == Nachrichten.DU_BIST_DRAN):
             token = parameter[-1]
-            #if self.vorherigeSpieler >= 2:
-                #if self.ist_pasch(self.angesagt) is False:
-                    #self.differenz_analyse(token)
-                #else:
-                    #self.vorherigeSpieler_analyse(token)
-            #else:
-            if self.gespielteRunden>=200 and self.vorherigeSpieler>=1:
-                self.ansagen_analyse(token,self.spieler[self.vorherigerSpieler])
+            # if self.vorherigeSpieler >= 2:
+            # if self.ist_pasch(self.angesagt) is False:
+            # self.differenz_analyse(token)
+            # else:
+            # self.vorherigeSpieler_analyse(token)
+            # else:
+            if self.ist_hoeher(self.angesagt,[4,3]) is not True:
+                self.würfle(token)
+            elif self.gespielteRunden >= 200 and self.vorherigeSpieler >= 1:
+                self.ansagen_analyse(token, self.spieler[self.vorherigerSpieler])
             else:
                 self.erwartungswert_analyse(token)
 
@@ -54,6 +41,33 @@ class EinfacherBot(MaexchenBot):
 
     def zaehleSpieler(self):
         self.vorherigeSpieler += 1
+
+    def spielerSagtAn(self, parameter):
+        self.vorherangesagt = self.angesagt
+        self.angesagt = self.zerlege_wuerfel_string(parameter[-1])
+        self.zaehleSpieler()
+        self.merkeAnsagen(parameter[0])
+
+    def merkeAnsagen(self, spielername):
+        aktuellerSpieler = self.gebeAktuellenSpieler(spielername)
+        self.spieler[aktuellerSpieler].merke_Würfel(self.angesagt)
+        self.vorherigerSpieler = aktuellerSpieler
+
+    def gebeAktuellenSpieler(self, spielername):
+        global aktuellerSpieler
+        spielerinspieler = False
+        for einzelSpieler in self.spieler:
+            if einzelSpieler.name == spielername:
+                spielerinspieler = True
+                aktuellerSpieler = self.spieler.index(einzelSpieler)
+
+        if spielerinspieler is False:
+            self.erstelleSpieler(spielername)
+            aktuellerSpieler = -1
+        return aktuellerSpieler
+
+    def erstelleSpieler(self, name):
+        self.spieler.append(Spieler(name))
 
     def differenz_der_würfel(self):
         differenzDerAnsagen = 0
@@ -86,7 +100,9 @@ class EinfacherBot(MaexchenBot):
         else:
             return [1, 1]
 
-    def erwartungswert_analyse(self, token, erwartungswert_wuerfel=[6, 4]):
+    def erwartungswert_analyse(self, token, erwartungswert_wuerfel=None):
+        if erwartungswert_wuerfel is None:
+            erwartungswert_wuerfel = [6, 4]
         if self.ist_hoeher(self.angesagt, erwartungswert_wuerfel) is True:
             self.schaue(token)
         else:
@@ -104,9 +120,10 @@ class EinfacherBot(MaexchenBot):
         else:
             self.würfle(token)
 
-    def ansagen_analyse(self, token,spieler):
+    def ansagen_analyse(self, token, spieler):
         if self.ist_pasch(self.angesagt) is True:
-            if spieler.gebe_würfelanzahl(self.angesagt)>(int((spieler.ansagenanzahl/36)+2.5)):
+
+            if spieler.gebe_würfelanzahl(self.angesagt) > (int((spieler.ansagenanzahl / 36) + 2)) or self.angesagt is [6,6]:
                 self.schaue(token)
             else:
                 self.würfle(token)
@@ -129,15 +146,15 @@ class Spieler():
         möglichewerte = [1, 2, 3, 4, 5, 6]
         for ersten_würfel in möglichewerte:
             for zweiten_würfel in möglichewerte:
-                if ersten_würfel>=zweiten_würfel:
+                if ersten_würfel >= zweiten_würfel:
                     self.würfeanzahlen[(ersten_würfel, zweiten_würfel)] = 0
         self.name = name
-        self.ansagenanzahl=0
+        self.ansagenanzahl = 0
 
     def merke_Würfel(self, wurf):
-        print (self.würfeanzahlen,len(self.würfeanzahlen))
-        self.würfeanzahlen[tuple(wurf)] = self.würfeanzahlen[tuple(wurf)]+1
-        self.ansagenanzahl+=1
+        print(self.würfeanzahlen, len(self.würfeanzahlen))
+        self.würfeanzahlen[tuple(wurf)] = self.würfeanzahlen[tuple(wurf)] + 1
+        self.ansagenanzahl += 1
 
     def gebe_würfelanzahl(self, wurf):
         return self.würfeanzahlen[tuple(wurf)]
