@@ -1,6 +1,6 @@
 #!/bin/sh
 pushd server > /dev/null
-./start-server &
+./start-server $1 &
 popd
 
 pushd client/swing-spectator > /dev/null
