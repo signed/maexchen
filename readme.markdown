@@ -14,6 +14,7 @@ Set Up
 - Install a JVM (>= 1.7), Gradle (>= 2.8), Node (>=6.2.1) and NPM
 - Run `./install` to build and install `server`, `java-udp-helper`, `swing-spectator` and `java-simple-bot`
 - Run `./start` to start server and spectator. Ctrl-C to stop both.
+      - Use `./start 60000` to start server with initial delay of 1 minute (60000 msecs).
 - cd to `./client/java-simple-bot` running one of the two Java bots:
       - `./start-simple-bot`
       - `./start-random-bot`
