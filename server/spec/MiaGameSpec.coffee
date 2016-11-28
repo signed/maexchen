@@ -50,6 +50,31 @@ describe 'Mia Game', ->
 		expect(miaGame.players).toHavePlayer player1
 		expect(miaGame.players).toHavePlayer player2
 
+	it 'announces score to spectators when new player registers', ->
+		spyOn player1, 'currentScore'
+		miaGame.registerSpectator player1
+		miaGame.registerPlayer player2
+
+		expect(player1.currentScore).toHaveBeenCalled()
+
+	it 'accepts players and spectators to unregister', ->
+		miaGame.registerPlayer player1
+		miaGame.registerSpectator player2
+
+		miaGame.unregister player1
+		miaGame.unregister player2
+
+		expect(miaGame.players).not.toHavePlayer player1
+		expect(miaGame.players).not.toHavePlayer player2
+
+
+	it 'will set players to have score 0 after initial registration', ->
+		miaGame.registerPlayer player1
+		miaGame.registerPlayer player2
+
+		expect(miaGame.score.of(player1)).toBe 0
+		expect(miaGame.score.of(player2)).toBe 0
+
 	it 'accepts spectators to register', ->
 		expect(miaGame.players).not.toHavePlayer player1
 		miaGame.registerSpectator player1
@@ -70,6 +95,18 @@ describe 'Mia Game', ->
 		expect(miaGame.players).toHavePlayer newPlayer
 		expect(miaGame.players).not.toHavePlayer oldPlayer
 
+	it 'keeps score after reregistration of player with same name', ->
+		oldPlayer = name: 'theName'
+		newPlayer = name: 'theName'
+
+		miaGame.score.increaseFor(oldPlayer)
+		expect(miaGame.score.of(oldPlayer)).toBe 1
+
+		miaGame.registerPlayer oldPlayer
+		miaGame.registerPlayer newPlayer
+
+		expect(miaGame.score.of(newPlayer)).toBe 1
+
 	it 'delegates permute to the round', ->
 		round = permute: ->
 		spyOn round, 'permute'
@@ -87,6 +124,15 @@ describe 'Mia Game', ->
 			miaGame.newRound()
 			expect(player1.willJoinRound).toHaveBeenCalled()
 			expect(player2.willJoinRound).toHaveBeenCalled()
+
+		it 'should not broadcast new round with only a single registered player', ->
+			spyOn player1, 'willJoinRound'
+			spyOn player2, 'willJoinRound'
+			miaGame.unregister player2
+
+			miaGame.newRound()
+			expect(player1.willJoinRound).not.toHaveBeenCalled()
+			expect(player2.willJoinRound).not.toHaveBeenCalled()
 
 		it 'should have player for current round when she wants to', ->
 			player1.willJoinRound = accept
@@ -245,15 +291,6 @@ describe 'Mia Game', ->
 			miaGame.startRound()
 			expect(miaGame.announcedDice).toBeNull()
 
-		it 'should award all participating players a point', ->
-			registerPlayers 1, 2
-			spyOn miaGame.score, 'increaseFor'
-			miaGame.currentRound.add player1
-			miaGame.startRound()
-			
-			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player1
-			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player2
-
 		it 'should immediately cancel rounds with only a single player', ->
 			registerPlayers 1
 			spyOn miaGame, 'cancelRound'
@@ -262,6 +299,15 @@ describe 'Mia Game', ->
 			miaGame.startRound()
 			expect(miaGame.cancelRound).toHaveBeenCalledWith 'ONLY_ONE_PLAYER'
 			expect(miaGame.nextTurn).not.toHaveBeenCalled()
+
+		it 'canceled rounds should not award points', ->
+			registerPlayers 1
+			spyOn miaGame, 'cancelRound'
+			spyOn miaGame.score, 'increaseFor'
+			miaGame.currentRound.add player1
+			miaGame.startRound()
+			expect(miaGame.cancelRound).toHaveBeenCalledWith 'ONLY_ONE_PLAYER'
+			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player1
 
 	describe 'cancel round', ->
 
@@ -604,12 +650,12 @@ describe 'Mia Game', ->
 			miaGame.currentRound.add player2
 			spyOn miaGame, 'newRound'
 
-		it 'should decrease the score', ->
-			spyOn miaGame.score, 'decreaseFor'
-			miaGame.playersLose [player1, player2], 'theReason'
-			expect(miaGame.score.decreaseFor).toHaveBeenCalledWith player1
-			expect(miaGame.score.decreaseFor).toHaveBeenCalledWith player2
-			expect(miaGame.score.decreaseFor).not.toHaveBeenCalledWith player3
+		it 'should increase the score for others', ->
+			spyOn miaGame.score, 'increaseFor'
+			miaGame.playersLose [player3], 'theReason'
+			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player1
+			expect(miaGame.score.increaseFor).toHaveBeenCalledWith player2
+			expect(miaGame.score.increaseFor).not.toHaveBeenCalledWith player3
 
 		it 'should broadcast player lost to all players', ->
 			spyOn player1, 'playerLost'

@@ -18,16 +18,34 @@ Falls name gültig und neu ist, oder die Registrierung unter demselben Namen zul
 
   - Server kommuniziert mit dem Client ab jetzt über die Ursprungs-IP und den Ursprungs-Port der Register-Nachricht.
   - server->client: `REGISTERED`
-
+  
 Ansonsten:
 
   - server->client: `REJECTED`
+
+Bei erfolgreicher Anmeldung werden all Spectators über den aktuellen Score (auch 0 Punkte eines neuen Spielers)
+unterrichtet:
+
+  - server->spectators: `SCORE;spielerpunkte*` (siehe unten)
+
 
 Kriterien für gültige Spielernamen:
 
 - enthalten keinen whitespace
 - enthalten keine Doppelpunkte, Semikolons oder Kommas
 - sind maximal 20 Zeichen lang
+
+Abmelden
+--------
+- client->server: `UNREGISTER`
+- server->client: `UNREGISTERED`
+
+Herzschlag
+----------
+Alle 2 Sekunden bekommt jeder client den "Herzschlag" des Servers übermittelt, um beim Ausbleiben reagieren zu können.
+
+- server->client: `HEARTBEAT`
+
 
 Start einer Spielrunde
 -----------------------
@@ -56,7 +74,7 @@ Bei `ROLL`:
 
 - server->clients: `PLAYER ROLLS;name`
 - server->client: `ROLLED;dice;token`
-- client->server: `ANNOUNCE;dice';token`
+- client->server: `ANNOUNCE;dice;token`
 - server->clients: `ANNOUNCED;name;dice`
 
 Falls Mäxchen angesagt wurde, wird sofort aufgedeckt. Wenn tatsächlich Mäxchen gewürfelt wurde, verlieren alle anderen Spieler, ansonsten der ansagende.
@@ -73,6 +91,8 @@ Bei `SEE`:
 Wann immer ein Spieler nicht rechtzeitig antwortet oder etwas völlig falsch macht:
 
 - server->clients: `PLAYER LOST;name;reason`
+
+Jeder Spieler, der NICHT VERLIERT, bekommt einen Punkt.
 
 Nach Ende einer Runde:
 

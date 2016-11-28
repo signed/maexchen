@@ -13,6 +13,9 @@ class Score
 	decreaseFor: (player) ->
 		@scores[player.name] = @of(player) - 1
 
+	resetFor: (player) ->
+		@scores[player.name] = 0
+
 	all: ->
 		result = {}
 		for name, score of @scores

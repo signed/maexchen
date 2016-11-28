@@ -1,0 +1,3 @@
+#!/bin/sh
+CLASSPATH=./build/libs/java-simple-bot.jar:../java-udp-helper/build/libs/udp-helper-1.0.jar
+java -cp $CLASSPATH simplebot.Main 'localhost' 9000 'random-java-bot' 'random'

@@ -44,6 +44,12 @@ class RemotePlayer
 	registered: ->
 		@sendMessage 'REGISTERED'
 	
+	unregistered: ->
+		@sendMessage 'UNREGISTERED'
+
+	heartbeat: ->
+		@sendMessage 'HEARTBEAT', false
+
 	registrationRejected: (reason) ->
 		@sendMessage "REJECTED;#{reason}"
 
@@ -75,6 +81,9 @@ class RemotePlayer
 		@changeState new InactiveState
 		@sendMessage "ROUND CANCELED;#{reason}"
 
+	sortByName: (players) ->
+		return players.slice(0).sort (a, b) -> a.name > b.name
+
 	roundStarted: (roundNumber, players) ->
 		playersString = (player.name for player in players).join()
 		@sendMessage "ROUND STARTED;#{roundNumber};#{playersString}"
@@ -86,18 +95,19 @@ class RemotePlayer
 		@sendMessage "ACTUAL DICE;#{dice}"
 
 	playerLost: (players, reason) ->
-		playersString = (player.name for player in players).join()
+		playersString = (player.name for player in @sortByName(players)).join()
 		@sendMessage "PLAYER LOST;#{playersString};#{reason}"
 
 	currentScore: (scores) ->
-		scoreString = ("#{name}:#{score}" for name, score of scores).join()
+		sortedPlayerNames = Object.keys(scores).sort (a, b) -> a > b
+		scoreString = ("#{name}:#{scores[name]}" for name in sortedPlayerNames).join()
 		@sendMessage "SCORE;#{scoreString}"
 
 	handleMessage: (messageCommand, messageArgs) ->
 		@currentState.handleMessage messageCommand, messageArgs
 
-	sendMessage: (message) ->
-		@sendMessageCallback message
+	sendMessage: (message, withLogging=true) ->
+		@sendMessageCallback message, withLogging
 
 	generateToken: ->
 		uuid()

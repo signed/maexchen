@@ -136,7 +136,6 @@ public class DataCollector implements MessageListener {
 	}
 
 	private void handleScores(String message) {
-		if (roundIsIncomplete()) return;
 		Scores scores = Scores.parse(message);
 		for (ScoreListener listener : scoreListeners) {
 			listener.scoresAfterRound(scores, currentRoundNumber);

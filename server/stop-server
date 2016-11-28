@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ -f server.pid ]
+then
+    pid=`cat server.pid`
+    echo "Trying to shut down server with pid" $pid "..."
+    kill -9 $pid &> /dev/null
+    if [ $? -ne 0 ];
+    then
+        echo "No process matching pid" $pid"."
+    else
+        echo "Server with pid" $pid "has been shut down."
+    fi
+    rm server.pid
+fi

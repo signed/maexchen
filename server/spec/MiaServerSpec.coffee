@@ -5,6 +5,7 @@ describe 'mia server', ->
 	game =
 		registerPlayer: ->
 		registerSpectator: ->
+		unregister: ->
 		stop: ->
 
 	server = connection = null
@@ -12,6 +13,7 @@ describe 'mia server', ->
 		name: 'theName'
 		remoteHost: 'theHost'
 		registered: ->
+		unregistered: ->
 		registrationRejected: ->
 
 	beforeEach ->
@@ -21,9 +23,11 @@ describe 'mia server', ->
 			id: 'theHost:thePort'
 
 		spyOn player, 'registered'
+		spyOn player, 'unregistered'
 		spyOn player, 'registrationRejected'
 		spyOn game, 'registerPlayer'
 		spyOn game, 'registerSpectator'
+		spyOn game, 'unregister'
 		spyOn(server, 'createPlayer').andReturn player
 
 	afterEach ->
@@ -37,14 +41,23 @@ describe 'mia server', ->
 
 	it 'should accept registrations', ->
 		server.handleMessage 'REGISTER', ['theName'], connection
-		expect(game.registerPlayer).toHaveBeenCalled()
+		expect(game.registerPlayer).toHaveBeenCalledWith player
 		expect(player.registered).toHaveBeenCalled()
 
 	it 'should accept spectator registrations', ->
 		server.handleMessage 'REGISTER_SPECTATOR', ['theName'], connection
-		expect(server.game.registerSpectator).toHaveBeenCalled()
+		expect(server.game.registerSpectator).toHaveBeenCalledWith player
 		expect(player.registered).toHaveBeenCalled()
 	
+	it 'should accept unregistration', ->
+		server.handleMessage 'REGISTER', ['theName'], connection
+		server.handleMessage 'UNREGISTER', ['theName'], connection
+		expect(game.unregister).toHaveBeenCalled()
+		expect(player.unregistered).toHaveBeenCalled()
+
+	it 'should ignore bogus unregistration', ->
+		server.handleMessage 'UNREGISTER', ['mallory'], connection
+
 	it 'should reject registrations with invalid player names', ->
 		expectNameToBeRejected ''
 		expectNameToBeRejected 'nameWithSemicolon;'
@@ -52,11 +65,6 @@ describe 'mia server', ->
 		expectNameToBeRejected 'nameWithComma,'
 		expectNameToBeRejected 'nameWithColon:'
 		expectNameToBeRejected 'nameWhichIsWayTooLong'
-
-	it 'should accept spectator registrations', ->
-		server.handleMessage 'REGISTER_SPECTATOR', ['theName'], connection
-		expect(server.game.registerSpectator).toHaveBeenCalled()
-		expect(player.registered).toHaveBeenCalled()
 
 	it 'should accept an updated registration from the same remote host', ->
 		theNewConnection = belongsTo: ->

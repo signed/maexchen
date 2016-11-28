@@ -1,0 +1,14 @@
+Server:
+- Beim Beenden des Servers wird der Spielstand auf Console ausgegeben
+- Anmeldungen und Abmeldungen werden an alle gebroadcast: "NEW_PLAYER;name" + "PLAYER_LEFT;name".
+- Server in Testmodus setzen: Langsamer und ohne Zeitlimit der Clients.
+- Server wird bei "zu wenig joins" langsamer.
+
+Java Client:
+- Beendet sich bei fehlendem Server-Heartbeat
+
+Spectator:
+- Versucht sich bei fehlendem Server-Heartbeat in größer werdenden Abständen neu zu registrieren
+
+Python Client:
+- Doku für Python Bot Programmierer.

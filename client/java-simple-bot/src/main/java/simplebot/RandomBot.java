@@ -8,14 +8,17 @@ import udphelper.MessageSender;
 public class RandomBot implements MessageListener {
 
 	private final MessageSender messageSender;
+	private final String name;
 
 	public RandomBot(String name, MessageSender messageSender) {
+		this.name = name;
 		this.messageSender = messageSender;
 		tryToSend("REGISTER;" + name);
 	}
 
 	private void tryToSend(String message) {
 		try {
+		    System.out.println("---> " + message);
 			messageSender.send(message);
 		} catch (IOException e) {
 			System.err.println("Failed to send " + message + ": " + e.getMessage());
@@ -23,7 +26,7 @@ public class RandomBot implements MessageListener {
 	}
 
 	public void onMessage(String message) {
-		System.out.println(message);
+		System.out.println("<--- " + message);
 		String[] parts = message.split(";");
 		if (parts[0].equals("ROUND STARTING")) {
 			tryToSend("JOIN;"+parts[1]);
@@ -36,6 +39,11 @@ public class RandomBot implements MessageListener {
 		} else if (parts[0].equals("ROLLED")) {
 			tryToSend("ANNOUNCE;" + parts[1] + ";" + parts[2]);
 		}
+	}
+
+    @Override
+	public void onStop() {
+	    tryToSend("UNREGISTER");
 	}
 
 }

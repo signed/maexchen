@@ -33,3 +33,9 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
 }
+
+task run(type: JavaExec, dependsOn:classes, overwrite: true) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'spectator.Main'
+	args 'localhost', 9000 
+}

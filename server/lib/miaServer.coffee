@@ -18,21 +18,42 @@ class Server
 		@players = {}
 		@udpSocket = dgram.createSocket 'udp4', handleRawMessage
 		@udpSocket.bind port
+		@heartbeat = @startHeartbeat()
 
 	enableLogging: -> log = console.log
 
+	startHeartbeat: ->
+		return setInterval () =>
+			for id, player of @players
+				player.heartbeat()
+		, 2000
+
 	handleMessage: (messageCommand, messageArgs, connection) ->
 		log "handleMessage '#{messageCommand}' '#{messageArgs}' from #{connection.id}"
-		if messageCommand == 'REGISTER'
+		if messageCommand == 'ECHO'
+			if (messageArgs.length > 0)
+				text = messageArgs.join('')
+			else
+				text = '42'
+			@handleEcho text, connection
+		else if messageCommand == 'REGISTER'
 			name = messageArgs[0]
 			@handleRegistration name, connection, false
 		else if messageCommand == 'REGISTER_SPECTATOR'
 			name = messageArgs[0]
 			@handleRegistration name, connection, true
+		else if messageCommand == 'UNREGISTER'
+			player = @playerFor connection
+			if player?
+				@handleUnregistration player, connection
 		else
 			player = @playerFor connection
 			player?.handleMessage messageCommand, messageArgs
 	
+	handleEcho: (text, connection) ->
+		log "echoing: '#{text}'"
+		connection.sendMessage "ECHOING;" + text
+
 	handleRegistration: (name, connection, isSpectator) ->
 		newPlayer = @createPlayer name, connection
 		unless @isValidName name
@@ -41,6 +62,11 @@ class Server
 			newPlayer.registrationRejected 'NAME_ALREADY_TAKEN'
 		else
 			@addPlayer connection, newPlayer, isSpectator
+
+	handleUnregistration: (player, connection) ->
+		delete @players[connection.id]
+		@game.unregister player
+		player.unregistered()
 
 	isValidName: (name) ->
 		name != '' and name.length <= 20 and not /[,;:\s]/.test name
@@ -55,6 +81,7 @@ class Server
 		null
 
 	shutDown: ->
+		clearInterval(@heartbeat)
 		@udpSocket.close()
 
 	playerFor: (connection) ->
@@ -77,12 +104,16 @@ class Server
 	
 		belongsTo: (player) ->
 			player.remoteHost == @host
+
+		sendMessage: (message) ->
+			buffer = new Buffer(message)
+			@socket.send buffer, 0, buffer.length, @port, @host
 	
 		createPlayer: (name) ->
-			sendMessageCallback = (message) =>
-				log "sending '#{message}' to #{name} (#{@id})"
-				buffer = new Buffer(message)
-				@socket.send buffer, 0, buffer.length, @port, @host
+			sendMessageCallback = (message, withLogging) =>
+				if withLogging
+					log "sending '#{message}' to #{name} (#{@id})"
+				@sendMessage message
 			player = remotePlayer.create name, sendMessageCallback
 			
 			player.remoteHost = @host

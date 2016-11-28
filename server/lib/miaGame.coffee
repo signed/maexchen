@@ -19,6 +19,10 @@ class PlayerList
 		@players = @collect (existingPlayer) -> existingPlayer.name != newPlayer.name
 		@players.push newPlayer
 
+	remove: (player) ->
+		index = @players.indexOf player
+		@players.splice index, 1 if index isnt -1
+
 	first: (fn) ->
 		return if @isEmpty()
 		fn @players[0]
@@ -28,6 +32,10 @@ class PlayerList
 	eachRealPlayer: (fn) -> @realPlayers().forEach fn
 
 	realPlayers: -> @collect (player) -> !player.isSpectator?
+
+	eachSpectator: (fn) -> @spectators().forEach fn
+
+	spectators: -> @collect (player) -> player.isSpectator?
 
 	collect: (predicate) ->
 		player for player in @players when predicate(player)
@@ -56,10 +64,19 @@ class MiaGame
 		@roundNumber = 0
 		@startRoundsEarly = true
 
-	registerPlayer: (player) -> @players.add player
+	registerPlayer: (player) =>
+		@score.resetFor(player) if @score.of(player) == 0
+		@players.add player
+		@players.eachSpectator (spectator) =>
+		    spectator.currentScore(@score.all())
+
 	registerSpectator: (player) ->
 		player.isSpectator = true
 		@players.add player
+
+	unregister: (player) =>
+		@players.remove player
+
 	setBroadcastTimeout: (@broadcastTimeout) ->
 	setDiceRoller: (@diceRoller) ->
 	doNotStartRoundsEarly: -> @startRoundsEarly = false
@@ -69,13 +86,16 @@ class MiaGame
 
 	newRound: ->
 		return if @stopped
+
+		if @players.size() < 2
+			setTimeout (=> @newRound()), 500
+			return
+
 		@roundNumber++
 		@currentRound = round = new PlayerList
 		expirer = @startExpirer =>
 			return if @stopped
-			if @players.isEmpty()
-				@newRound()
-			else if round.isEmpty()
+			if round.isEmpty()
 				@cancelRound 'NO_PLAYERS'
 			else
 				@startRound()
@@ -91,8 +111,6 @@ class MiaGame
 		@permuteRound(@currentRound)
 		@actualDice = null
 		@announcedDice = null
-		@currentRound.each (player) =>
-			@score.increaseFor player
 		@players.each (player) =>
 			player.roundStarted @roundNumber, @currentRound.players
 		if @currentRound.size() > 1
@@ -185,8 +203,9 @@ class MiaGame
 
 	playersLose: (losingPlayers, reason) ->
 		return if @stopped
-		for player in losingPlayers
-			@score.decreaseFor player
+		@currentRound.each (player) =>
+			if player not in losingPlayers
+				@score.increaseFor player
 		@players.each (player) ->
 			player.playerLost losingPlayers, reason
 		@broadcastScore()

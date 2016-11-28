@@ -23,9 +23,24 @@ The server accepts the registration (server->client: `REGISTERED`) if the name i
 - a new client registers for the first time, or
 - an existing client re-registers from the same client IP as before (but possibly with a different port; see below).
 
+In case of a successful registration all spectators will be sent the latest score, 0 scores included:
+
+  - server->spectators: `SCORE;playerpoints*` (see below)
+
 In all other cases, the server rejects the registration request (server->client: `REJECTED`).
 
 After a successful registration, the server will send messages to the client using the IP and the port from which the registration message was sent.
+
+Unregistration
+--------------
+- client->server: `UNREGISTER`
+- server->client: `UNREGISTERED`
+
+Heartbeat
+---------
+Every 2 seconds each client will be sent a "heartbeat" signal from the server, so that it can react when the server (or the communication) dies:
+
+- server->client: `HEARTBEAT`
 
 
 Round start
@@ -67,6 +82,8 @@ On `SEE`:
 
 Whenever a players does not respond in time or does something wrong:
 - server->clients: `PLAYER LOST;name;reason`
+
+Every player that has NOT LOST gets a point added to their score.
 
 At the end of each round:
 - server->clients: `SCORE;playerpoints` (where `playerpoints` is a comma separated list with entries in the form of `name:points`)

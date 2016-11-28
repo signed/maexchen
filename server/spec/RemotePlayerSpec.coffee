@@ -25,7 +25,7 @@ describe "remotePlayer", ->
 			player.willJoinRound mySpy.callback
 
 		it 'should send ROUND STARTING', ->
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND STARTING;theToken'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND STARTING;theToken', true
 		
 		it 'should accept a JOIN', ->
 			player.handleMessage 'JOIN', ['theToken']
@@ -45,7 +45,7 @@ describe "remotePlayer", ->
 			player.yourTurn mySpy.callback
 
 		it 'should send YOUR TURN', ->
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'YOUR TURN;theToken'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'YOUR TURN;theToken', true
 
 		it 'should accept a ROLL', ->
 			player.handleMessage 'ROLL', ['theToken']
@@ -69,7 +69,7 @@ describe "remotePlayer", ->
 			player.yourRoll 'theDice', mySpy.callback
 
 		it 'should send ROLLED', ->
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROLLED;theDice;theToken'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROLLED;theDice;theToken', true
 
 		it 'should accept ANNOUNCE', ->
 			player.handleMessage 'ANNOUNCE', ['3,1', 'theToken']
@@ -88,7 +88,7 @@ describe "remotePlayer", ->
 
 		it 'should send ROUND CANCELED', ->
 			player.roundCanceled 'theReason'
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND CANCELED;theReason'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND CANCELED;theReason', true
 
 		it 'should ignore previously valid messages', ->
 			player.yourRoll 'theDice', mySpy.callback
@@ -102,44 +102,52 @@ describe "remotePlayer", ->
 		it 'should send ANNOUNCED notifications', ->
 			otherPlayer = name: 'theOtherPlayer'
 			player.announcedDiceBy 'theDice', otherPlayer
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ANNOUNCED;theOtherPlayer;theDice'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ANNOUNCED;theOtherPlayer;theDice', true
 
 		it 'should send ROUND STARTED notifications', ->
 			player1 = name: 'player1'
 			player2 = name: 'player2'
 			player.roundStarted 23, [player1, player2]
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND STARTED;23;player1,player2'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ROUND STARTED;23;player1,player2', true
 
 		it 'should send PLAYER ROLLS notifications', ->
 			rollingPlayer = name: 'rollingPlayer'
 			player.playerRolls rollingPlayer
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER ROLLS;rollingPlayer'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER ROLLS;rollingPlayer', true
 
 		it 'should send PLAYER WANTS TO SEE notifications', ->
 			seeingPlayer = name: 'seeingPlayer'
 			player.playerWantsToSee seeingPlayer
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER WANTS TO SEE;seeingPlayer'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER WANTS TO SEE;seeingPlayer', true
 
 		it 'should send ACTUAL DICE notifications', ->
 			player.actualDice dice.create(3, 2)
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ACTUAL DICE;3,2'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'ACTUAL DICE;3,2', true
 
 		it 'should send PLAYER LOST notifications', ->
 			losingPlayer1 = name: 'player1'
 			losingPlayer2 = name: 'player2'
 			player.playerLost [losingPlayer1, losingPlayer2], 'theReason'
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER LOST;player1,player2;theReason'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'PLAYER LOST;player1,player2;theReason', true
 
 		it 'should send SCORE notifications', ->
 			scores = player1: 23, player2: 42
 			player.currentScore scores
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'SCORE;player1:23,player2:42'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'SCORE;player1:23,player2:42', true
 
 		it 'should send REGISTERED notifications', ->
 			player.registered()
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REGISTERED'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REGISTERED', true
+
+		it 'should send UNREGISTERED notifications', ->
+			player.unregistered()
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'UNREGISTERED', true
 
 		it 'should send REJECTED notifications', ->
 			player.registrationRejected 'forAReason'
-			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REJECTED;forAReason'
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'REJECTED;forAReason', true
+
+		it 'should send HEARTBEAT notifications', ->
+			player.heartbeat()
+			expect(mySpy.sendMessage).toHaveBeenCalledWith 'HEARTBEAT', false
 

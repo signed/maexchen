@@ -1,0 +1,14 @@
+#!/bin/sh
+pushd server > /dev/null
+./start-server $1 &
+popd
+
+pushd client/swing-spectator > /dev/null
+./start-spectator &
+popd
+
+function ctrl_c() {
+   ./stop
+}
+
+(trap ctrl_c SIGHUP SIGINT SIGTERM; sleep 86400 ;)

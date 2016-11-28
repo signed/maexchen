@@ -82,7 +82,7 @@ public class SpectatorApplication {
 		rightColumn.setBackground(SystemColor.window);
 		rightColumn.setBorder(null);
 		rightColumn.setLayout(new MigLayout("", "[grow,fill]", "[15px][][][]"));
-		scoresTableHeader = new JLabel("Warte auf ersten Punktestand...");
+		scoresTableHeader = new JLabel("Warte auf ersten Bot...");
 		scoresTableHeader.setFont(new Font("Arial", Font.BOLD, 18));
 		rightColumn.add(scoresTableHeader, "cell 0 0,alignx left,aligny top");
 		scoresTableHeader.setVerticalAlignment(SwingConstants.TOP);
