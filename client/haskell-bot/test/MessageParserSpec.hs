@@ -22,11 +22,13 @@ spec =
     it "parses ROUND STARTING" $ do
       parseCommand "ROUND STARTING;some-token-456" `shouldBe` (RoundStarting "some-token-456")
 
+    it "parses YOUR TURN" $ do
+      parseCommand "YOUR TURN;some-token-123" `shouldBe` (YourTurn "some-token-123")
+
     it "parses an unknown command as UNKNOWN" $ do
       parseCommand "REGISTERED" `shouldBe` (Unknown "REGISTERED")
       parseCommand "REJECTED" `shouldBe` (Unknown "REJECTED")
       parseCommand "ROUND STARTED;503;PlayerA,PlayerB" `shouldBe` (Unknown "ROUND STARTED;503;PlayerA,PlayerB")
-      parseCommand "YOUR TURN;some-token-123" `shouldBe` (Unknown "YOUR TURN;some-token-123")
       parseCommand "PLAYER ROLLS;PlayerA" `shouldBe` (Unknown "PLAYER ROLLS;PlayerA")
       parseCommand "ROLLED;4,2;some-token" `shouldBe` (Unknown "ROLLED;4,2;some-token")
       parseCommand "ANNOUNCED;PlayerA;5,5" `shouldBe` (Unknown "ANNOUNCED;PlayerA;5,5")

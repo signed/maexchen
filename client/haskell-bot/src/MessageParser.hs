@@ -20,6 +20,7 @@ run_parser p str = case parse p "" str of
 
 commandParser :: Parser Command
 commandParser = roundStartingP
+            <|> yourTurnP
             <|> unknownP
             <?> "Parse error"
 
@@ -29,6 +30,12 @@ roundStartingP = do
   semiP
   token <- tokenP
   return $ RoundStarting token
+
+yourTurnP = do
+  try $ symbolP "YOUR TURN"
+  semiP
+  token <- tokenP
+  return $ YourTurn token
 
 unknownP = do
   unknownCommand <- lineP
