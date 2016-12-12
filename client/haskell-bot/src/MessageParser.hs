@@ -5,14 +5,17 @@ import Text.ParserCombinators.Parsec
 import qualified Text.ParserCombinators.Parsec.Token as T
 import Text.ParserCombinators.Parsec.Language
 
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as BSC
+
 import Command
 
-parseCommand :: String -> Command
+parseCommand :: BS.ByteString -> Command
 parseCommand = run_parser commandParser
 
 
-run_parser :: Parser a -> String -> a
-run_parser p str = case parse p "" str of
+run_parser :: Parser a -> BS.ByteString -> a
+run_parser p str = case parse p "" (BSC.unpack str) of
   Left err  -> error $ "parse error at " ++ (show err)
   Right val -> val
 

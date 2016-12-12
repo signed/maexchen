@@ -23,8 +23,8 @@ handler :: Socket -> IO ()
 handler sock = do
     (msg,_) <- recvFrom sock 1024
     -- putStrLn $ "< " ++ (BSC.unpack msg)
-    print $ parseCommand (BSC.unpack msg)
-    let response = replyFor $ parseCommand (BSC.unpack msg)
+    print $ parseCommand msg
+    let response = replyFor $ parseCommand msg
     BSC.putStrLn response
     res <- if (BS.null response) then return 0 else send sock response
     handler sock
