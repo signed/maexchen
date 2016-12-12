@@ -16,9 +16,11 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     SimpleBot
+                     , MessageParser
   build-depends:       base >= 4.7 && < 5
                      , network
                      , bytestring
+                     , parsec
   default-language:    Haskell2010
 
 executable bot
@@ -37,6 +39,8 @@ test-suite test
   main-is:             Spec.hs
   build-depends:       base
                      , haskell-bot
+                     , tasty
+                     , tasty-hspec
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 

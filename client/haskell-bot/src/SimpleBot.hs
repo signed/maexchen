@@ -6,6 +6,8 @@ module SimpleBot (
 import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
 
+import MessageParser
+
 import Data.List (isPrefixOf)
 import qualified Data.ByteString.Char8 as BSC
 import Data.Char (digitToInt)
@@ -15,7 +17,8 @@ import qualified Data.ByteString as BS
 handler :: Socket -> IO ()
 handler sock = do
     (msg,_) <- recvFrom sock 1024
-    -- putStrLn $ "< " ++ msg
+    putStrLn $ "< " ++ (BSC.unpack msg)
+    print $ parseCommand (BSC.unpack msg)
     let response = replyFor msg
     BSC.putStrLn response
     res <- if (BS.null response) then return 0 else send sock response

@@ -1,2 +1,6 @@
+import qualified MessageParserSpec as MPS
+
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+   MPS.main
