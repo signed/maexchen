@@ -18,7 +18,7 @@ teamname = "Haskellians"
 
 
 main :: IO ()
-main = withSocketsDo $ bracket connectMe sClose handler
+main = withSocketsDo $ bracket connectMe close handler
           where
             connectMe = do
               (serveraddr:_) <- getAddrInfo Nothing ipaddress port
