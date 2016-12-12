@@ -6,6 +6,7 @@ import Test.Tasty
 --import Test.Tasty.HUnit
 import Test.Tasty.Hspec
 
+import Command
 import MessageParser
 
 

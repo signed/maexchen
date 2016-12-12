@@ -6,6 +6,7 @@ module SimpleBot (
 import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
 
+import Command
 import MessageParser
 
 import Data.List (isPrefixOf)

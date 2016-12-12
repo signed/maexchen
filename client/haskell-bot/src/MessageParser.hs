@@ -1,14 +1,11 @@
-module MessageParser where
+module MessageParser ( parseCommand ) where
 
 
 import Text.ParserCombinators.Parsec
 import qualified Text.ParserCombinators.Parsec.Token as T
 import Text.ParserCombinators.Parsec.Language
 
-
-data Command = RoundStarting String
-  | Unknown String
-  deriving (Eq, Show)
+import Command
 
 parseCommand :: String -> Command
 parseCommand = run_parser commandParser
@@ -19,7 +16,6 @@ run_parser p str = case parse p "" str of
   Left err  -> error $ "parse error at " ++ (show err)
   Right val -> val
 
-lexer = T.makeTokenParser emptyDef
 
 
 commandParser :: Parser Command
@@ -38,6 +34,8 @@ unknownP = do
   unknownCommand <- lineP
   return $ Unknown unknownCommand
 
+
+lexer = T.makeTokenParser emptyDef
 
 lineP     = many $ noneOf "\n"
 semiP     = T.semi lexer
