@@ -28,6 +28,7 @@ executable bot
   build-depends:       base
                      , haskell-bot
                      , network
+                     , bytestring
   default-language:    Haskell2010
 
 test-suite test

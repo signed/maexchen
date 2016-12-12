@@ -1,8 +1,10 @@
 module Main where
 
 import Control.Monad (unless)
-import Network.Socket
+import Network.Socket hiding (send, recvFrom)
+import Network.Socket.ByteString (send, recvFrom)
 import Control.Exception
+import Data.ByteString.Char8 (unpack)
 
 import SimpleBot
 
@@ -23,5 +25,5 @@ main = withSocketsDo $ bracket connectMe sClose handler
               sock <- socket (addrFamily serveraddr) Datagram defaultProtocol
               connect sock (addrAddress serveraddr)
               send sock $ register teamname
-              recv sock 1024 >>= \msg -> putStrLn $ "Received " ++ msg
+              recvFrom sock 1024 >>= \(msg,_) -> putStrLn $ "Received " ++ (unpack msg)
               return sock
