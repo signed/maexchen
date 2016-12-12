@@ -18,7 +18,7 @@ import qualified Data.ByteString as BS
 handler :: Socket -> IO ()
 handler sock = do
     (msg,_) <- recvFrom sock 1024
-    putStrLn $ "< " ++ (BSC.unpack msg)
+    -- putStrLn $ "< " ++ (BSC.unpack msg)
     print $ parseCommand (BSC.unpack msg)
     let response = replyFor msg
     BSC.putStrLn response

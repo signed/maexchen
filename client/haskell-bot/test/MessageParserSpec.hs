@@ -20,7 +20,18 @@ spec :: Spec
 spec =
   describe "parser" $ do
     it "parses ROUND STARTING" $ do
-      parseCommand "ROUND STARTING;some-token-id" `shouldBe` (RoundStarting "some-token-id")
+      parseCommand "ROUND STARTING;some-token-456" `shouldBe` (RoundStarting "some-token-456")
 
     it "parses an unknown command as UNKNOWN" $ do
-      parseCommand "ROUND CANCELED;some-token-id" `shouldBe` (Unknown "ROUND CANCELED;some-token-id")
+      parseCommand "REGISTERED" `shouldBe` (Unknown "REGISTERED")
+      parseCommand "REJECTED" `shouldBe` (Unknown "REJECTED")
+      parseCommand "ROUND STARTED;503;PlayerA,PlayerB" `shouldBe` (Unknown "ROUND STARTED;503;PlayerA,PlayerB")
+      parseCommand "YOUR TURN;some-token-123" `shouldBe` (Unknown "YOUR TURN;some-token-123")
+      parseCommand "PLAYER ROLLS;PlayerA" `shouldBe` (Unknown "PLAYER ROLLS;PlayerA")
+      parseCommand "ROLLED;4,2;some-token" `shouldBe` (Unknown "ROLLED;4,2;some-token")
+      parseCommand "ANNOUNCED;PlayerA;5,5" `shouldBe` (Unknown "ANNOUNCED;PlayerA;5,5")
+      parseCommand "PLAYER WANTS TO SEE;PlayerA" `shouldBe` (Unknown "PLAYER WANTS TO SEE;PlayerA")
+      parseCommand "ACTUAL DICE;5,5" `shouldBe` (Unknown "ACTUAL DICE;5,5")
+      parseCommand "PLAYER LOST;PlayerB;SOME_REASON" `shouldBe` (Unknown "PLAYER LOST;PlayerB;SOME_REASON")
+      parseCommand "SCORE;PlayerX:62,PlayerY:33" `shouldBe` (Unknown "SCORE;PlayerX:62,PlayerY:33")
+      parseCommand "ROUND CANCELED;SOME_REASON" `shouldBe` (Unknown "ROUND CANCELED;SOME_REASON")
