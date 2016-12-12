@@ -7,8 +7,11 @@ data Response =
   Register String
   | Join   String
   | See    String
+  | None
+  deriving (Eq, Show)
 
-show :: Response -> BS.ByteString
-show (Register playername) = BSC.pack $ "REGISTER;" ++ playername
-show (Join token)          = BSC.pack $ "JOIN;" ++ token
-show (See token)           = BSC.pack $ "SEE;" ++ token
+showR :: Response -> BS.ByteString
+showR (Register playername) = BSC.pack $ "REGISTER;" ++ playername
+showR (Join token)          = BSC.pack $ "JOIN;" ++ token
+showR (See token)           = BSC.pack $ "SEE;" ++ token
+showR None                  = BS.empty

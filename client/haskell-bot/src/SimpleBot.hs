@@ -5,7 +5,6 @@ module SimpleBot (
   , replyFor -- exposure for testing
   ) where
 
-import Prelude hiding (show)
 import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
 
@@ -25,16 +24,17 @@ handler :: Socket -> IO ()
 handler sock = do
     (msg,_) <- recvFrom sock 1024
     -- putStrLn $ "< " ++ (BSC.unpack msg)
-    print $ parseCommand msg
-    let response = replyFor $ parseCommand msg
-    BSC.putStrLn response
-    res <- if (BS.null response) then return 0 else send sock response
+    let command = parseCommand msg
+    putStrLn $ "--> " ++ (show command)
+    let response = replyFor command
+    putStrLn $ "<-- " ++ (show response)
+    res <- if (response == None) then return 0 else send sock (showR response)
     handler sock
 
-register :: String -> BS.ByteString
-register playername = show $ Register playername
+register :: String -> Response
+register playername = Register playername
 
-replyFor :: Command -> BS.ByteString
-replyFor (RoundStarting token) = show $ Join token
-replyFor (YourTurn token)      = show $ See token
-replyFor (Unknown _)           = BS.empty
+replyFor :: Command -> Response
+replyFor (RoundStarting token) = Join token
+replyFor (YourTurn token)      = See token
+replyFor (Unknown _)           = None
