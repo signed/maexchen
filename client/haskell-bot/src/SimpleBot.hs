@@ -28,7 +28,7 @@ handler sock = do
     putStrLn $ "--> " ++ (show command)
     let response = replyFor command
     putStrLn $ "<-- " ++ (show response)
-    res <- if (response == None) then return 0 else send sock (showR response)
+    if (response == None) then return 0 else send sock (showR response)
     handler sock
 
 register :: String -> Response
