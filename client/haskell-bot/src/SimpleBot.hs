@@ -7,7 +7,7 @@ import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
 
 import Data.List (isPrefixOf)
-import Data.ByteString.Char8 (split, pack, unpack)
+import Data.ByteString.Char8 (split, pack)
 import Data.Char (digitToInt)
 import qualified Data.ByteString as BS
 

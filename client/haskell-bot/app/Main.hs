@@ -1,9 +1,8 @@
 module Main where
 
-import Control.Monad (unless)
+import Control.Exception (bracket)
 import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
-import Control.Exception
 import Data.ByteString.Char8 (unpack)
 
 import SimpleBot
