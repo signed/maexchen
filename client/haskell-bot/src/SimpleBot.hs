@@ -5,11 +5,13 @@ module SimpleBot (
   , replyFor -- exposure for testing
   ) where
 
+import Prelude hiding (show)
 import Network.Socket hiding (send, recvFrom)
 import Network.Socket.ByteString (send, recvFrom)
 
 import Command
 import MessageParser
+import Response
 
 import Data.List (isPrefixOf)
 import qualified Data.ByteString.Char8 as BSC
@@ -30,9 +32,9 @@ handler sock = do
     handler sock
 
 register :: String -> BS.ByteString
-register teamname = BSC.pack $ "REGISTER;" ++ teamname
+register playername = show $ Register playername
 
 replyFor :: Command -> BS.ByteString
-replyFor (RoundStarting token) = BSC.pack $ "JOIN;" ++ token
-replyFor (YourTurn token)      = BSC.pack $ "SEE;" ++ token
+replyFor (RoundStarting token) = show $ Join token
+replyFor (YourTurn token)      = show $ See token
 replyFor (Unknown _)           = BS.empty
