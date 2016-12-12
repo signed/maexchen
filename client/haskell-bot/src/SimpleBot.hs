@@ -1,6 +1,8 @@
 module SimpleBot (
     handler
   , register
+
+  , replyFor -- exposure for testing
   ) where
 
 import Network.Socket hiding (send, recvFrom)
@@ -14,6 +16,8 @@ import qualified Data.ByteString.Char8 as BSC
 import Data.Char (digitToInt)
 import qualified Data.ByteString as BS
 
+import Command
+import MessageParser
 
 handler :: Socket -> IO ()
 handler sock = do
