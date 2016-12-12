@@ -2,7 +2,7 @@ name:                haskell-bot
 version:             0.1.0.0
 synopsis:            Initial project template from stack
 description:         Please see README.md
-homepage:            https://github.com/githubuser/haskell-bot#readme
+homepage:            https://github.com/NicoleRauch/maexchen
 license:             BSD3
 license-file:        LICENSE
 author:              Nicole Rauch
@@ -49,4 +49,4 @@ test-suite test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/haskell-bot
+  location: https://github.com/NicoleRauch/maexchen
