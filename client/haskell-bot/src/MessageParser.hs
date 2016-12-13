@@ -11,11 +11,11 @@ import qualified Data.ByteString.Char8 as BSC
 import Command
 
 parseCommand :: BS.ByteString -> Command
-parseCommand = run_parser commandParser
+parseCommand = runParser commandParser
 
 
-run_parser :: Parser a -> BS.ByteString -> a
-run_parser p str = case parse p "" (BSC.unpack str) of
+runParser :: Parser a -> BS.ByteString -> a
+runParser p str = case parse p "" (BSC.unpack str) of
   Left err  -> error $ "parse error at " ++ (show err)
   Right val -> val
 
