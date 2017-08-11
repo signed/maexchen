@@ -46,6 +46,8 @@ public class DataCollector implements MessageListener {
 			roundListener.roundCompleted(currentRoundNumber, currentRound.toString());
 		} else if (parts[0].equals("SCORE")) {
 			handleScores(message);
+		} else if (parts[0].equals("HEARTBEAT")) {
+			// ignore
 		} else {
 			appendFormattedMessage(parts);
 		}
